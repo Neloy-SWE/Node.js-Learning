@@ -6,9 +6,13 @@
 // require("./example_module");
 
 // import properties from the module:
+// CommonJS
 // const exampleModuleObject = require("./example_module");
+// const { fileName, print } = require("./example_module"); // destructuring assignment
+// let { fileName, print } = require("./example_module"); // use let to override the values
 
-const { fileName, calculateSum } = require("./example_module"); // destructuring assignment
+// ES module import:
+import { fileName, print } from "./example_module.js";
 
 let myName = "Neloy";
 console.log(myName);
@@ -22,9 +26,12 @@ console.log(myName);
 // console.log(globalThis === global); // true.
 
 // using module properties via object:
-// exampleModuleObject.calculateSum(10, 20);
+// exampleModuleObject.print();
 // console.log(exampleModuleObject.fileName);
 
 // using destructured properties:
-calculateSum(30, 40);
+print();
 console.log(fileName);
+// let fileName = "app.js"; // SyntaxError: Identifier 'fileName' has already been declared
+// fileName  = "app.js";
+// console.log(fileName);

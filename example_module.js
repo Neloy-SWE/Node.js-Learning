@@ -2,20 +2,25 @@
 
 console.log("module file is running...");
 
-let fileName = "example_module.js";
+// export let fileName = "example_module.js";
+const fileName = "example_module.js";
 
-function calculateSum(a, b) {
-    let sum = a + b;
-    console.log(sum);
+function print() {
+    console.log("Hello from example module");
 }
 
 // export properties:
+// console.log(module.exports); // empty object.
+// CommonJS export:
 // module.exports.fileName = fileName;
-// module.exports.calculateSum = calculateSum;
+// module.exports.print = print;
 
 // another way to export properties:
 // module.exports = {
 //     fileName: fileName,
-//     calculateSum: calculateSum,
+//     print: print,
 // };
-module.exports = { fileName, calculateSum };
+// module.exports = { fileName, print };
+
+// ES module export:
+export { fileName, print };
