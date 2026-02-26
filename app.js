@@ -1,7 +1,7 @@
 // to run a js file in node js, use the command: node fileName.js
 
 /**
- *  to import a module in node js, we use the require function. it is a built-in function in node js. it takes the path of the module as an argument and returns the exports of the module.
+ * to import a module in node js, we use the require function. it is a built-in function in node js. it takes the path of the module as an argument and returns the exports of the module.
  */
 // require("./example_module");
 
