@@ -14,6 +14,7 @@
 // ES module import:
 import { fileName, print } from "./example_module.js";
 import { calculateSum, calculateMultiply } from "./calculate/index_calculate.js"; // batch import
+import data from "./example_data.json" with {type: "json"}; // import json file with type json
 
 let myName = "Neloy";
 console.log(myName);
@@ -39,3 +40,5 @@ console.log(fileName);
 
 calculateSum(10, 20);
 calculateMultiply(10, 20);
+console.log(data);
+console.log(data.name);
