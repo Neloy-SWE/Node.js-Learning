@@ -13,6 +13,7 @@
 
 // ES module import:
 import { fileName, print } from "./example_module.js";
+import { calculateSum, calculateMultiply } from "./calculate/index_calculate.js"; // batch import
 
 let myName = "Neloy";
 console.log(myName);
@@ -35,3 +36,6 @@ console.log(fileName);
 // let fileName = "app.js"; // SyntaxError: Identifier 'fileName' has already been declared
 // fileName  = "app.js";
 // console.log(fileName);
+
+calculateSum(10, 20);
+calculateMultiply(10, 20);
