@@ -38,6 +38,9 @@ My personal Node.js learning repository - covering fundamentals to advanced conc
 - require() function perform:
     - resolve the module (check the file type)
     - load the file content
+    - compile the code
     - wrap inside the IIFE
     - evaluation (execute the code and return the module.exports)
     - cache the module for reuse in other modules
+
+## Synchronous & Asynchronous
