@@ -44,3 +44,25 @@ My personal Node.js learning repository - covering fundamentals to advanced conc
     - cache the module for reuse in other modules
 
 ## Synchronous & Asynchronous
+- Synchronous programming executes the tasks in a predetermined order, where each operation waits for the previous one to complete before proceeding.
+    - known as bloking or sequential programming.
+- Asynchronous programming allows tasks to execute independently of one another, enabling concurrent execution and improved performance.
+    - known as non-blocking programming.
+
+## V8
+V8 is Google’s open source high-performance JavaScript and WebAssembly engine, written in C++. It is used in Chrome and in Node.js, among others. It implements ECMAScript and WebAssembly, and runs on Windows, macOS, and Linux systems that use x64, IA-32, or ARM processors. V8 can be embedded into any C++ application.
+
+## libuv
+Libuv is a high-performance, open-source C library primarily designed for asynchronous, non-blocking I/O operations. Originally developed for Node.js, it acts as the backbone of its event-driven architecture, enabling efficient handling of network sockets, file systems, DNS resolution, and child processes across different platforms.
+
+## Thread
+A thread is the smallest unit of execution within a process in an operating system. It represents a single sequence of instructions that can be managed independently by a scheduler. Multiple threads can exist within a single process, sharing the same memory space but executing independently. This allows for parallel execution of tasks within a program, improving efficiency and responsiveness.<br>Threads can be either:
+- signle-threaded
+- multi-threaded
+
+js is single-threaded. but with the power of node.js it can handle asynchronous operations, allowing js to perform multiple tasks concurrently.
+
+## Call Stack
+The call stack is a fundamental mechanism used by the JavaScript engine (V8) to keep track of the functions being executed in a program. It operates on a Last-In, First-Out (LIFO) principle.
+- The JavaScript engine operates with a single call stack, and all the code you write is executed within this call stack. The engine runs on a single thread, meaning it can only perform one operation at a time.
+- In addition to the call stack, the JavaScript engine also includes a memory heap. This memory heap stores all the variables, numbers, and functions that your code uses.
