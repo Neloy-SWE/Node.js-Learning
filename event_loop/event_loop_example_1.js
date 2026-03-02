@@ -15,13 +15,27 @@ fs.readFile('../file.txt', 'utf-8', (err, data) => {
     }
 });
 
-setTimeout(() => console.log('Timeout 1'), 0);
+setTimeout(() => console.log('Timeout 1'), 1000);
 
-function printA(){
+function printA() {
     console.log('Value of a: ' + a);
 }
 
 printA();
+
+let i = 0;
+
+while (i < 2000000000) {
+    i++;
+    if (i === 2000000000) {
+        console.log('While loop complete');
+    }
+}
+/**
+ * this while loop will take some time to complete and during this time, all the callbacks will be ready in queue. as we know that event loop starts from timer phase and setTimeout is in timer phase, so after this while loop complete, we will be able to see the output of setTimeout's callback first and then setImmediate's callback.
+ * 
+ */
+
 console.log('End');
 
 /**

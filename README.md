@@ -100,3 +100,9 @@ event loop traverses several phases in a specific order during each iteration:
 - **Poll**: The Poll phase executes most of the tasks like- I/O, file reading, HTTP requests and much more.
 - **Check**: Executes setImmediate() callbacks immediately after the poll phase finishes.
 - **Close**: Handles cleanup tasks, such as closing a socket connection.
+
+There are 2 special microtask queues in Node.js:
+- process.nextTick queue
+- Promise microtask queue
+
+They are not part of the event loop phases.
