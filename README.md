@@ -49,9 +49,6 @@ My personal Node.js learning repository - covering fundamentals to advanced conc
 - Asynchronous programming allows tasks to execute independently of one another, enabling concurrent execution and improved performance.
     - known as non-blocking programming.
 
-## libuv
-Libuv is a high-performance, open-source C library primarily designed for asynchronous, non-blocking I/O operations. Originally developed for Node.js, it acts as the backbone of its event-driven architecture, enabling efficient handling of network sockets, file systems, DNS resolution, and child processes across different platforms.
-
 ## Thread
 A thread is the smallest unit of execution within a process in an operating system. It represents a single sequence of instructions that can be managed independently by a scheduler. Multiple threads can exist within a single process, sharing the same memory space but executing independently. This allows for parallel execution of tasks within a program, improving efficiency and responsiveness.<br>Threads can be either:
 - signle-threaded
@@ -87,5 +84,19 @@ Throughout this process, simultaneously the **Orinoco garbage collector** runs i
 - code execution. during this step, when engine finds any function, engine creates function execution context and follow same process.
 - after complete function execution, call stack pop it and after executing all, call stack finally pop the global execution context.
 
+## libuv
+Libuv is a high-performance, open-source C library primarily designed for asynchronous, non-blocking I/O operations. Originally developed for Node.js, it acts as the backbone of its event-driven architecture, enabling efficient handling of network sockets, file systems, DNS resolution, and child processes across different platforms.
+
 ## Asynchronous code execution
-V8 execute synchonous operations line by line. but when it finds any async task, it passes the task to the libuv. OS level operations like file read, write, input, output, DB operations, network call, socket related task, timer, libuv can perform.<br> V8 engine perform all the sync task and passes async tasks to libuv and libuv complete the tasks and wait for when the call stack become free. once V8 engine complete all the async task and clear memory via garbage collector pop global context and the call stack become free, libuv returns all the responses to the call stack via event loop.
+V8 execute synchonous operations line by line. but when it finds any async task, it passes the task to the libuv. OS level operations like file read, write, input, output, DB operations, network call, socket related task, timer, libuv can perform.<br> V8 engine perform all the sync task and passes async tasks to libuv and libuv complete the tasks and wait for when the call stack become free. once V8 engine complete all the async task and clear memory via garbage collector, pop global context and the call stack become free, libuv returns all the responses to the call stack via event loop.
+
+## Event loop
+event loop is a core mechanism that allows Node.js to perform non-blocking I/O operations despite using a single JavaScript thread. It is a continuous process, managed by the underlying libuv library, that orchestrates the execution of synchronous and asynchronous code by managing various queues of callback functions.
+
+event loop traverses several phases in a specific order during each iteration:
+- **Timers phase**: This phase processes timers that have been set using setTimeout() and setInterval().
+- **Pending callbacks**: This phase executes I/O-related callbacks that were deferred from the previous loop cycle. pending callbacks handle low-level system errors.
+- **Idle/Prepare**: This phase in the Node.js event loop is an internal, low-level stage used exclusively by libuv for housekeeping and optimization before entering the Poll phase. It prepares the event loop to check for new I/O events, acting as a setup phase to ensure efficient handling of network connections and file system tasks.
+- **Poll**: The Poll phase executes most of the tasks like- I/O, file reading, HTTP requests and much more.
+- **Check**: Executes setImmediate() callbacks immediately after the poll phase finishes.
+- **Close**: Handles cleanup tasks, such as closing a socket connection.
