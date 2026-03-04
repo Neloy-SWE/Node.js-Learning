@@ -102,8 +102,8 @@ event loop traverses several phases in a specific order during each iteration:
 - **Close**: Handles cleanup tasks, such as closing a socket connection.
 
 There are 2 special microtask queues in Node.js:
-- process.nextTick queue
-- Promise microtask queue
+- nextTick queue managed by Node for process.nextTick callback.
+- microtask queue handled by V8 for Promise callback.
 
 They are not part of the event loop phases.
 
@@ -118,3 +118,53 @@ when all threads are blocked, operations waits for thread to be free.
 
 There are also some operations handled by:
 - OS kernel: Operations like network requests (using the net or http modules).
+
+## Execution process
+- When a Node.js program starts, V8 begins executing all synchronous JavaScript code on the main thread using the call stack.
+- Every synchronous statement runs immediately and blocks the thread until it finishes. Nothing else can run while the call stack is busy.
+- When asynchronous APIs are called (such as setTimeout, setImmediate, fs.readFile, crypto, or network operations), they are not executed immediately.
+- These async APIs are implemented in Node’s C++ core layer. That layer communicates with libuv, which is the library responsible for the event loop, timers, thread pool, and OS-level I/O handling.
+- When setTimeout or setInterval is called:
+    - Node core registers a timer with libuv.
+    - libuv stores the timer internally.
+    - The callback will run later in the Timers phase when the delay has expired.
+- When fs.readFile or certain crypto operations are called:
+    - Node core delegates the work to libuv.
+    - libuv sends the task to its internal thread pool.
+    - When the thread finishes the task, the callback becomes ready for execution in the Poll phase.
+- When network operations (TCP/HTTP) are performed:
+    - libuv registers them with the operating system kernel.
+    - The OS notifies libuv when data is ready.
+    - The callback is then queued for execution in the Poll phase.
+- setImmediate is registered by Node core to run later in the Check phase of the event loop.
+- Promise callbacks (.then, await) are handled entirely by V8. They are placed into the microtask queue.
+- process.nextTick callbacks are stored in a special nextTick queue managed by Node. This queue has higher priority than the Promise microtask queue.
+- After the entire synchronous script finishes executing and the call stack becomes empty, Node performs a microtask checkpoint:
+    - First, it executes all callbacks in the process.nextTick queue.
+    - Then, it executes all callbacks in the Promise microtask queue.
+    - Both queues are fully drained before moving forward.
+- Once synchronous code and initial microtasks are completed, the event loop begins running.
+- The event loop moves through its phases in this order:
+    - Timers
+    - Pending Callbacks
+    - Idle/Prepare (internal, not accessible from JavaScript)
+    - Poll
+    - Check
+    - Close Callbacks
+- In the Timers phase, expired setTimeout and setInterval callbacks are executed.
+- In the Pending Callbacks phase, certain system-level I/O callbacks that were deferred from the previous cycle are executed.
+- The Idle and Prepare phases are used internally by libuv for housekeeping and preparing for the Poll phase. JavaScript code cannot run directly in these phases.
+- In the Poll phase:
+    - The event loop executes I/O callbacks such as file reads and network responses.
+    - If no callbacks are ready, the event loop may wait here for new I/O events.
+- In the Check phase, setImmediate callbacks are executed.
+- In the Close Callbacks phase, close event handlers such as socket.on('close') are executed.
+- Within each phase, the event loop processes one callback at a time.
+- A callback (whether timer, I/O, immediate, or close) can only execute when the call stack is empty. JavaScript execution must finish before another callback begins.
+- After executing each individual callback, Node performs another microtask checkpoint:
+    - It drains the entire process.nextTick queue.
+    - Then it drains the entire Promise microtask queue.
+    - Only after both queues are empty does the event loop continue.
+- This means microtasks do not wait for a full phase to complete. They run after every single callback execution.
+- The event loop continues rotating through its phases as long as there are pending timers, I/O operations, or scheduled callbacks.
+- If there are no more callbacks to process and no pending async operations, the program exits.
