@@ -91,7 +91,7 @@ Libuv is a high-performance, open-source C library primarily designed for asynch
 V8 execute synchonous operations line by line. but when it finds any async task, it passes the task to the libuv. OS level operations like file read, write, input, output, DB operations, network call, socket related task, timer, libuv can perform.<br> V8 engine perform all the sync task and passes async tasks to libuv and libuv complete the tasks and wait for when the call stack become free. once V8 engine complete all the async task and clear memory via garbage collector, pop global context and the call stack become free, libuv returns all the responses to the call stack via event loop.
 
 ## Event loop
-event loop is a core mechanism that allows Node.js to perform non-blocking I/O operations despite using a single JavaScript thread. It is a continuous process, managed by the underlying libuv library, that orchestrates the execution of synchronous and asynchronous code by managing various queues of callback functions.
+event loop is a core mechanism that allows Node.js to perform non-blocking I/O operations despite using a single JavaScript thread. It is a continuous process, managed by the underlying libuv library, that orchestrates the execution of synchronous and asynchronous code by managing various queues of callback functions.<br>One Cycle of the event loop is known as **tick**.
 
 event loop traverses several phases in a specific order during each iteration:
 - **Timers phase**: This phase processes timers that have been set using setTimeout() and setInterval().
@@ -106,3 +106,15 @@ There are 2 special microtask queues in Node.js:
 - Promise microtask queue
 
 They are not part of the event loop phases.
+
+## Thread pool
+The thread pool in Node.js is a collection of background worker threads managed by the libuv library that handles time-consuming or blocking operations, allowing the main, single-threaded event loop to remain non-blocking. in node.js, size of the thread pool is 4 by default. thread pool performs operations like:
+- File System Operations: All fs module operations, except for fs.FSWatcher.
+- DNS Lookups: Specifically dns.lookup(), as opposed to dns.resolve(), which uses native async mechanisms.
+- Cryptography: Operations like crypto.pbkdf2() and crypto.scrypt().
+- Compression: Zlib operations.
+
+when all threads are blocked, operations waits for thread to be free.
+
+There are also some operations handled by:
+- OS kernel: Operations like network requests (using the net or http modules).
