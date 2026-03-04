@@ -110,7 +110,7 @@ They are not part of the event loop phases.
 ## Thread pool
 The thread pool in Node.js is a collection of background worker threads managed by the libuv library that handles time-consuming or blocking operations, allowing the main, single-threaded event loop to remain non-blocking. in node.js, size of the thread pool is 4 by default. thread pool performs operations like:
 - File System Operations: All fs module operations, except for fs.FSWatcher.
-- DNS Lookups: Specifically dns.lookup(), as opposed to dns.resolve(), which uses native async mechanisms.
+- DNS(Domain Name System) Lookups: Specifically dns.lookup(), as opposed to dns.resolve(), which uses native async mechanisms.
 - Cryptography: Operations like crypto.pbkdf2() and crypto.scrypt().
 - Compression: Zlib operations.
 
@@ -168,3 +168,5 @@ There are also some operations handled by:
 - This means microtasks do not wait for a full phase to complete. They run after every single callback execution.
 - The event loop continues rotating through its phases as long as there are pending timers, I/O operations, or scheduled callbacks.
 - If there are no more callbacks to process and no pending async operations, the program exits.
+
+When we write only synchronous code then Node is single threaded and for asynchronous code it is multi-threded
