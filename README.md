@@ -94,7 +94,7 @@ V8 execute synchonous operations line by line. but when it finds any async task,
 event loop is a core mechanism that allows Node.js to perform non-blocking I/O operations despite using a single JavaScript thread. It is a continuous process, managed by the underlying libuv library, that orchestrates the execution of synchronous and asynchronous code by managing various queues of callback functions.<br>One Cycle of the event loop is known as **tick**.
 
 event loop traverses several phases in a specific order during each iteration:
-- **Timers phase**: This phase processes timers that have been set using setTimeout() and setInterval().
+- **Timers phase**: This phase processes timers using min-heap, that have been set using setTimeout() and setInterval().
 - **Pending callbacks**: This phase executes I/O-related callbacks that were deferred from the previous loop cycle. pending callbacks handle low-level system errors.
 - **Idle/Prepare**: This phase in the Node.js event loop is an internal, low-level stage used exclusively by libuv for housekeeping and optimization before entering the Poll phase. It prepares the event loop to check for new I/O events, acting as a setup phase to ensure efficient handling of network connections and file system tasks.
 - **Poll**: The Poll phase executes most of the tasks like- I/O, file reading, HTTP requests and much more.
@@ -117,7 +117,37 @@ The thread pool in Node.js is a collection of background worker threads managed 
 when all threads are blocked, operations waits for thread to be free.
 
 There are also some operations handled by:
-- OS kernel: Operations like network requests (using the net or http modules). libuv uses Epoll for linux, Kqueue for macOS, IOCP for windows to person such operations.
+- OS kernel: Operations like network requests (using the net or http modules). libuv uses Epoll for linux, Kqueue for macOS, IOCP for windows to person such operations. when libuv interacts with the OS for networking tasks, it uses sockets. Networking operations occur through these sockets. Each socket has a socket descriptor, also known as a file descriptor (although this has nothing to do with the file system).<br><br>When an incoming request arrives on a socket, and we want to write data to this connection, it involves blocking operations. To handle this, a thread is created for each request. However, creating a separate thread for each connection is not practical, especially when dealing with thousands of requests.<br><br>Instead, the system uses efficient mechanisms provided by the OS such as epoll (on Linux) or kqueue (on macOS) or IOCP (on Windows). These mechanisms handle multiple file descriptors (sockets) without needing a thread per connection.<br><br>Here’s how it works:
+    - epoll (Linux), kqueue (macOS) and IOCP (Windows) are notification mechanisms used to manage many connections efficiently.
+    - When we create an epoll or kqueue descriptor, it monitors multiple file descriptors (sockets) for activity.
+    - The OS kernel manages these mechanisms and notifies libuv of any changes or activity on the sockets.
+    - This approach allows the server to handle a large number of connections efficiently without creating a thread for each one.
+
+  The kernel-level mechanisms, like epoll, kqueue and iocp , provide a scalable way to manage multiple connections, significantly improving performance and resource utilization in a high-concurrency environment.
+
+## Socket
+A network socket is an endpoint for sending and receiving data between two programs over a network, defined by the combination of an IP address and a port number. It serves as the interface between an application and the network protocol stack (like TCP/IP), allowing programs to communicate using a unique address.
+
+## File descriptor
+file descriptor are integral to Unix-like operating systems, including Linux and macOS. They are used by the operating system to manage open files, sockets, and other I/O resources.
+
+## Socket descriptor
+socket descriptors are a special type of file descriptor used to manage network connections. They are essential for network programming, allowing processes to communicate over a network.
+
+## Event Emitters
+Event Emitters are a core concept in Node.js, used to handle asynchronous events. They allow objects to emit named events that can be listened to by other parts of the application. The EventEmitter class is provided by the Node.js events module. Here's a brief overview:
+- Creating an EventEmitter: we create an instance of EventEmitter and use the on method to register event listeners.
+- Emitting Events: Use the emit method to trigger events and pass data to listeners.
+- Handling Events: Listeners (functions) handle the emitted events and perform actions based on the event data.
+
+## Streams
+Streams in Node.js are objects that facilitate reading from or writing to a data source in a continuous fashion. Streams are particularly useful for handling large amounts of data efficiently.
+
+## Buffers
+Buffers are used to handle binary data in Node.js. They provide a way to work with raw memory allocations and are useful for operations involving binary data, such as reading files or network communications.
+
+## Pipes
+Pipes in Node.js are a powerful feature for managing the flow of data between streams. They simplify the process of reading from a readable stream and writing to a writable stream, facilitating efficient and seamless data processing.
 
 ## Execution process
 - When a Node.js program starts, V8 begins executing all synchronous JavaScript code on the main thread using the call stack.
@@ -169,4 +199,11 @@ There are also some operations handled by:
 - The event loop continues rotating through its phases as long as there are pending timers, I/O operations, or scheduled callbacks.
 - If there are no more callbacks to process and no pending async operations, the program exits.
 
-When we write only synchronous code then Node is single threaded and for asynchronous code it is multi-threded
+When we write only synchronous code then Node is single threaded and for asynchronous code it is multi-threded.
+
+## Things to follow:
+- don't block the main thread.
+    - don't use sync methods.
+    - don't perform havy json operation.
+    - don't perform complex regex operation.
+    - don't perform complex calculations or run loop.
