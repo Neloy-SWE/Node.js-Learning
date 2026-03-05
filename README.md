@@ -117,7 +117,7 @@ The thread pool in Node.js is a collection of background worker threads managed 
 when all threads are blocked, operations waits for thread to be free.
 
 There are also some operations handled by:
-- OS kernel: Operations like network requests (using the net or http modules).
+- OS kernel: Operations like network requests (using the net or http modules). libuv uses Epoll for linux, Kqueue for macOS, IOCP for windows to person such operations.
 
 ## Execution process
 - When a Node.js program starts, V8 begins executing all synchronous JavaScript code on the main thread using the call stack.
