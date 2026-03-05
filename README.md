@@ -201,9 +201,14 @@ Pipes in Node.js are a powerful feature for managing the flow of data between st
 
 When we write only synchronous code then Node is single threaded and for asynchronous code it is multi-threded.
 
-## Things to follow:
+### Things to follow:
 - don't block the main thread.
     - don't use sync methods.
     - don't perform havy json operation.
     - don't perform complex regex operation.
     - don't perform complex calculations or run loop.
+
+## Server
+A server is a powerful computer, hardware device, or software program designed to manage network resources, store data, and process requests from other devices known as "clients". Operating within a client-server model, servers provide services like web hosting, data storage, or application management, handling multiple requests simultaneously.
+- Hardware: A physical machine (computer) that provides resources and services to other computers (clients) over a network.
+- Software: An application or program that handles requests and delivers data to clients.
