@@ -210,5 +210,159 @@ When we write only synchronous code then Node is single threaded and for asynchr
 
 ## Server
 A server is a powerful computer, hardware device, or software program designed to manage network resources, store data, and process requests from other devices known as "clients". Operating within a client-server model, servers provide services like web hosting, data storage, or application management, handling multiple requests simultaneously.
-- Hardware: A physical machine (computer) that provides resources and services to other computers (clients) over a network.
-- Software: An application or program that handles requests and delivers data to clients.
+- **Hardware**: A physical machine (computer) that provides resources and services to other computers (clients) over a network.
+- **Software**: An application or program that handles requests and delivers data to clients.
+
+## Protocol
+A network protocol is a collection of rules that governs how data is transmitted, received, and interpreted between devices on a network, regardless of their internal structure or design.
+- Defines what, how, and when data is communicated.
+- Enables communication between heterogeneous devices.
+- Ensures reliable and standardized data exchange.
+- Prevents data loss, duplication, and misinterpretation.
+
+The **OSI (Open Systems Interconnection) Model** is a set of rules that explains how different computer systems communicate over a network. OSI Model was developed by the International Organization for Standardization (ISO). The OSI Model consists of 7 layers and each layer has specific functions and responsibilities. This layered approach makes it easier for different devices and technologies to work together.
+layers:
+- Physical Layer
+- Data Link Layer (DLL)
+- Network Layer
+- Transport Layer
+- Session Layer
+- Presentation Layer
+- Application Layer
+
+
+The protocols can be broadly classified into three major categories:
+- **Network Communication**: Communication protocols are really important for the functioning of a network. They are so crucial that it is not possible to have computer networks without them. These protocols formally set out the rules and formats through which data is transferred. These protocols handle syntax, semantics, error detection, synchronization, and authentication. Below mentioned are some network communication protocol:
+     - **Hypertext Transfer Protocol(HTTP)**: Hypertext Transfer Protocol (HTTP) is an application layer (Layer 7) protocol used for transferring hypertext data between systems on the World Wide Web.
+        - Works on a client-server model.
+        - Used for loading web pages in browsers.
+        - Stateless protocol (does not store session information).
+        - Most data exchange on the web uses HTTP.
+        - Less secure unless used with HTTPS.
+    - **Transmission Control Protocol(TCP)**: Transmission Control Protocol (TCP) is a connection-oriented transport layer protocol that provides reliable and ordered data delivery.
+        - Establishes a connection before data transmission.
+        - Uses sequenced acknowledgments to ensure reliability.
+        - Provides error detection and flow control.
+        - Guarantees data delivery in the correct order.
+        - Used in email, FTP, web browsing, and streaming services.
+    - **User Datagram Protocol(UDP)**: User Datagram Protocol (UDP) is a connectionless transport layer protocol that provides fast but unreliable data transmission.
+        - Does not establish a connection before sending data.
+        - No error recovery, flow control, or reliability mechanisms.
+        - Faster than TCP due to minimal overhead.
+        - Suitable where speed is more important than accuracy.
+        - Used in video streaming, online gaming, multicasting, and broadcasting.
+    - **Border Gateway Protocol(BGP)**: Border Gateway Protocol (BGP) is a routing protocol used to exchange routing information between autonomous systems on the Internet.
+        - Controls how data packets travel across multiple networks.
+        - Used between large networks operated by different organizations.
+        - Connects LANs to other LANs across the Internet.
+        - Ensures efficient and scalable Internet routing.
+        - Plays a critical role in global Internet connectivity.
+    - **Address Resolution Protocol(ARP)**: Address Resolution Protocol (ARP) maps logical IP addresses to physical MAC addresses within a local network.
+        - Used in local area networks (LANs).
+        - Maintains an ARP cache for IP-to-MAC mappings.
+        - Helps devices identify each other on a network.
+        - Essential for packet delivery within a LAN.
+        - Operates between the Network and Data Link layers.
+    - **Internet Protocol(IP)**: Internet Protocol (IP) is a network layer protocol responsible for addressing and routing data packets across networks.
+        - Sends data from source host to destination host.
+        - Uses IP addresses for device identification.
+        - Supports packet routing across different networks.
+        - Connectionless and best-effort delivery protocol.
+        - Forms the foundation of the Internet.
+    - **Dynamic Host Configuration Protocol(DHCP)**: Dynamic Host Configuration Protocol (DHCP) is a network management protocol used to automatically configure devices on IP networks.
+        - Automatically assigns IP addresses to devices.
+        - Provides configuration details such as subnet mask, gateway, and DNS.
+        - Reduces manual network configuration errors.
+        - Enables devices to access services like DNS and NTP.
+        - Simplifies network administration and management.
+- **Network Management**: These protocols assist in describing the procedures and policies that are used in monitoring, maintaining, and managing the computer network. These protocols also help in communicating these requirements across the network to ensure stable communication. Network management protocols can also be used for troubleshooting connections between a host and a client.
+    - **Internet Control Message Protocol(ICMP)**: Internet Control Message Protocol (ICMP) is a network layer (Layer 3) protocol used by network devices to send error messages and operational information.
+        - Reports network errors and congestion issues.
+        - Used for diagnostic purposes such as ping and traceroute.
+        - Helps detect unreachable hosts and timeouts.
+        - Does not transfer user data directly.
+        - Essential for network troubleshooting.
+    - **Simple Network Management Protocol(SNMP)**: Simple Network Management Protocol (SNMP) is an application layer (Layer 7) protocol used to manage and monitor network devices on an IP network.
+        - Used for network monitoring and management.
+        - Consists of three main components: SNMP Manager, SNMP Agent, Managed Device.
+        - SNMP agents collect and send network information to the manager.
+        - Helps monitor performance, detect faults, and troubleshoot issues.
+        - Widely used in enterprise networks.
+    - **Gopher**: Gopher is a file retrieval protocol used to search, retrieve, and manage files stored on remote systems.
+        - Organizes files in a hierarchical (menu-based) structure.
+        - Provides descriptive information for easy file retrieval.
+        - One of the earliest Internet protocols.
+        - Largely obsolete and replaced by HTTP and FTP.
+    - **File Transfer Protocol(FTP)**: File Transfer Protocol (FTP) is a client-server protocol used to transfer files between a local system and a remote host.
+    Allows uploading and downloading of files.
+        - Operates over TCP/IP.
+        - Commonly used for file sharing and website management.
+        - Supports authentication using username and password.
+        - Less secure unless used with encryption.
+    - **Post Office Protocol(POP3)**: Post Office Protocol version 3 (POP3) is an email protocol used by mail clients to retrieve emails from a mail server.
+        - Downloads emails from the server to the local device.
+        - Emails are usually deleted from the server after download.
+        - Uses TCP/IP for communication.
+        - Suitable for single-device email access.
+        - Simple but less flexible than IMAP.
+    - **Telnet**: Telnet is a remote access protocol that allows users to connect to and control a remote system.
+        - Enables remote command execution.
+        - Operates in a client-server model.
+        - Transmits data in plain text (not secure).
+        - Mostly replaced by SSH due to security concerns.
+        - Used mainly for testing and legacy systems.
+- **Network Security**: These protocols secure the data in passage over a network. These protocols also determine how the network secures data from any unauthorized attempts to extract or review data. These protocols make sure that no unauthorized devices, users, or services can access the network data. Primarily, these protocols depend on encryption to secure data.
+    - **Secure Socket Layer(SSL)**: Secure Socket Layer (SSL) is a network security protocol used to protect sensitive data and secure communication over the Internet.
+        - Encrypts data transferred between communicating systems.
+        - Supports both client-to-server and server-to-server communication.
+        - Prevents unauthorized access and data interception.
+        - Ensures confidentiality of sensitive information.
+        - Forms the foundation for secure web communication.
+    - **Hypertext Transfer Protocol(HTTPS)**: Hypertext Transfer Protocol Secure (HTTPS) is the secure version of HTTP that ensures encrypted communication between a web browser and a web server.
+        - Uses SSL/TLS to secure data transmission.
+        - Protects user data from interception and tampering.
+        - Commonly used for secure web browsing.
+        - Ensures data confidentiality and integrity.
+        - Indicated by a padlock icon in web browsers.
+    - **Transport Layer Security(TLS)**: Transport Layer Security (TLS) is a security protocol designed to provide privacy, data integrity, and authentication over the Internet.
+        - Encrypts data during transmission.
+        - Verifies data integrity to detect tampering.
+        - Authenticates communicating parties.
+        - Widely used in web applications, email services, and VoIP.
+        - Successor and more secure version of SSL.
+- **Some Other Protocols**
+    - **Internet Message Access Protocol (IMAP)**: Internet Message Access Protocol (IMAP) is an email protocol used to retrieve and manage emails directly from a mail server.
+        - Allows users to view and manage emails without downloading them permanently.
+        - Emails remain stored on the mail server.
+        - Enables access to the same mailbox from multiple devices.
+        - Supports folder organization and synchronization.
+        - More flexible than POP3.
+    - **Session Initiation Protocol (SIP)**: Session Initiation Protocol (SIP) is a signaling protocol used to initiate, manage, and terminate real-time communication sessions.
+        - Used in voice, video, and messaging applications.
+        - Establishes communication sessions between users.
+        - Manages session setup, modification, and termination.
+        - Commonly used in VoIP and video conferencing.
+        - Works with RTP to transmit media data.
+    - **Real-Time Transport Protocol (RTP)**: Real-Time Transport Protocol (RTP) is used to transmit audio and video data over IP networks in real time.
+        - Supports real-time multimedia communication.
+        - Used along with SIP for audio and video transmission.
+        - Provides sequence numbering and timestamping.
+        - Ensures timely delivery of streaming media.
+        - Widely used in video calls and live streaming.
+    - **Point To Point Tunnelling Protocol (PPTP)**: Point-to-Point Tunneling Protocol (PPTP) is a protocol used to implement Virtual Private Networks (VPNs).
+        - Encapsulates PPP frames inside IP datagrams.
+        - Enables secure data transmission over public networks.
+        - Used for remote access VPN connections.
+        - Simple to configure but less secure than modern VPN protocols.
+    - **Trivial File Transfer Protocol (TFTP)**: Trivial File Transfer Protocol (TFTP) is a lightweight and simplified version of FTP used for basic file transfer.
+        - Uses UDP instead of TCP.
+        - Provides minimal functionality and no authentication.
+        - Commonly used for boot files and firmware updates.
+        - Faster but less secure than FTP.
+    - **Resource Location Protocol (RLP)**: Resource Location Protocol (RLP) is used to locate and assign network resources to users.
+        - Helps locate resources such as printers, servers, and devices.
+        - Uses broadcast queries to find available resources.
+        - Supports efficient resource discovery on a network.
+        - Useful in distributed network environments.
+
+**Note**: *OSI (Open Systems Interconnection) Model, its layers, protocol are more related to networking. if anyone finds interest in these topics, can study more about these.*
