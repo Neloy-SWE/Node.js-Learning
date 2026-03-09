@@ -1,15 +1,15 @@
 import { MongoClient } from 'mongodb';
 
-const url = "mongodb+srv://neloyswe:nodeLearning@nodeproject.pxasein.mongodb.net/";
+const url = process.env.mongodbUrl;
 const client = new MongoClient(url);
 
-const dbName = "test_db";
+const dbName = process.env.dbName;
 
 async function main() {
     await client.connect();
     console.log('Connected successfully to server');
     const db = client.db(dbName);
-    const collection = db.collection('User');
+    const collection = db.collection(process.env.collectionUser);
 
 
     const newUser = {
@@ -59,7 +59,7 @@ async function main() {
      */
 }
 
-main()
+main() 
     .then(console.log)
     .catch(console.error)
     .finally(() => client.close());
