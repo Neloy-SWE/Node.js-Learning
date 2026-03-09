@@ -1,15 +1,23 @@
+// import 'dotenv/config';
+import dotenv from 'dotenv';
+import dotenvExpand from 'dotenv-expand';
 import { MongoClient } from 'mongodb';
+// import dotenv from 'dotenv';
+// dotenv.config();
 
-const url = process.env.mongodbUrl;
+const myEnv = dotenv.config();
+dotenvExpand.expand(myEnv);
+
+const url = process.env.MONGODB_URL;
 const client = new MongoClient(url);
 
-const dbName = process.env.dbName;
+const dbName = process.env.DB_NAME;
 
 async function main() {
     await client.connect();
     console.log('Connected successfully to server');
     const db = client.db(dbName);
-    const collection = db.collection(process.env.collectionUser);
+    const collection = db.collection(process.env.COLLECTION_USER);
 
 
     const newUser = {
@@ -24,8 +32,8 @@ async function main() {
     // console.log('Inserted document =>', insertResult);
 
     // read
-    // const findResult = await collection.find({}).toArray();
-    // console.log('Found documents =>', findResult);
+    const findResult = await collection.find({}).toArray();
+    console.log('Found documents =>', findResult);
 
     // count
     // const count = await collection.countDocuments();
