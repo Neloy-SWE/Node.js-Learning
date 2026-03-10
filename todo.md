@@ -1,0 +1,6 @@
+- set nodemon
+- create readme for projects
+    - add project setup instruction
+    - add about express
+    - add in line comments of coding details
+    - add package.json>script related details
