@@ -1,6 +1,6 @@
 {
   "type": "module",
-  "name": "dev_tinder_backend",
+  "name": "dev_hub_backend",
   "version": "1.0.0",
   "description": "learning project-backend",
   "main": "index.js",
