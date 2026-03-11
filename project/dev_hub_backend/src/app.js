@@ -1,4 +1,4 @@
-import express, { response } from 'express';
+import express from 'express';
 
 const app = express();
 /**
@@ -12,7 +12,7 @@ const app = express();
  * 
  */
 // app.use("/",(req, res)=> {
-// we can call this callback is a Route handler method
+// // we can call this callback is a Route handler method
 //     res.send("Hello form the server!");
 // });
 
@@ -51,16 +51,52 @@ const app = express();
 //     response.send("User deleted successfully!");
 // });
 
-app.use("/infinity", (req, res) => {}); // not returning any response will cause the request to hang and will not send any response to the client and will keep the connection open until it times out.
+/**
+ * use() method is used to define a route handler for all the HTTP methods (GET, POST, PUT, DELETE, etc.). but get(), post(), put(), delete() methods are used to define a route handler for specific HTTP methods.
+ */
 
-// multiple route handler:
+app.use("/infinity", (req, res) => { }); // not returning any response will cause the request to hang and will not send any response to the client and will keep the connection open until it times out.
+
+// multiple route handler
+// we can also add all route handlers in an array like this: app.use("/multipleRouteHandler", [routeHandler1, routeHandler2, routeHandler3] or [routeHandler1, routeHandler2], routeHandler3 or routeHandler1, [routeHandler2], routeHandler3);
 app.use("/multipleRouteHandler", (req, res, next) => {
-    // res.send("Route handler 1");
-    next();
     console.log("LOG:: Route handler 1");
-}, (req, res) => {
-    res.send("Route handler 2");
-});
+    // res.send("Route handler 1");
+    /**
+     * if we open the previous line then, then the first route handler will send a response to the client. 
+     * 
+     * as we know that js execute the code line by line, so after sending the response to the client, it will execute the next() function which will move to the next route handler and will execute the second route handler.
+     * 
+     * as we know that when client request something to the server, a socket connection is established between the client and the server and once the server sends a response to the client, the connection is closed. but here, next() function try to execute the second route handler and the second handler try to send a response and because the connection is already closed, it will throw an error: Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client.
+     * 
+     * so we will not write code like this.
+     */
+    next();
+    // console.log("LOG:: Route handler 1");
+    // res.send("Route handler 1");
+    /**
+     * previous line also will be responsible for same error. but because it is after the next() function, second route handler will be executed, close the connection and then the first route handler will try to send a response and will throw the same error.
+     */
+}, (req, res, next) => {
+    console.log("LOG:: Route handler 2");
+    // res.send("Route handler 2");
+    next();
+    /**
+     * now if we again use next(), then it will move to the next route handler and will execute the third route handler.
+     * 
+     * if there are no more route handlers then it will throw an error: Cannot GET /multipleRouteHandler. because there is no route handler to handle the request
+     * 
+     * if there are more route handlers but no response is sent, then it will keep the connection open until it times out.
+     */
+},
+(req, res, next) => {
+    console.log("LOG:: Route handler 3");
+    // res.send("Route handler 3");
+    // next();
+    res.send("Route handler 3");
+    // if response is sent and no more route handler is there with sending response then it will not throw any error even if we call next(). but good to avoid it (logical).
+}
+);
 /**
  * though there are 2 route handlers but only the first one will be executed and the second one will not be executed because the first one is sending a response to the client and once a response is sent to the client then the connection is closed and no further route handlers will be executed.
  * 
