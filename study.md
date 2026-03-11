@@ -7,5 +7,6 @@
 - sql vs no sql
 - difference between put and patch
 - http requests (crud)
--  package-lock.json
--  package.json
+- package-lock.json
+- package.json
+- difference between caret (^) and tilde (~) (see uses in version definition)

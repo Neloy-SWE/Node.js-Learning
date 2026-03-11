@@ -8,16 +8,16 @@ import { MongoClient } from 'mongodb';
 const myEnv = dotenv.config();
 dotenvExpand.expand(myEnv);
 
-const url = process.env.mongodbURL;
+const url = process.env.MONGODB_URL;
 const client = new MongoClient(url);
 
-const dbName = process.env.dbName;
+const dbName = process.env.DB_NAME;
 
 async function main() {
     await client.connect();
     console.log('Connected successfully to server');
     const db = client.db(dbName);
-    const collection = db.collection(process.env.collectionUser);
+    const collection = db.collection(process.env.COLLECTION_USER);
 
 
     const newUser = {
