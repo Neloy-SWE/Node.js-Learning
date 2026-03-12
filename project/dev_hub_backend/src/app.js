@@ -90,13 +90,13 @@ app.use("/multipleRouteHandlerExample-1", (req, res, next) => {
      * if there are more route handlers but no response is sent, then it will keep the connection open until it times out.
      */
 },
-(req, res, next) => {
-    console.log("LOG:: Route handler 3");
-    // res.send("Route handler 3");
-    // next();
-    res.send("Route handler 3");
-    // if response is sent and no more route handler is there with sending response then it will not throw any error even if we call next(). but good to avoid it (logical).
-}
+    (req, res, next) => {
+        console.log("LOG:: Route handler 3");
+        // res.send("Route handler 3");
+        // next();
+        res.send("Route handler 3");
+        // if response is sent and no more route handler is there with sending response then it will not throw any error even if we call next(). but good to avoid it (logical).
+    }
 );
 /**
  * though there are 2 route handlers but only the first one will be executed and the second one will not be executed because the first one is sending a response to the client and once a response is sent to the client then the connection is closed and no further route handlers will be executed.
@@ -107,12 +107,12 @@ app.use("/multipleRouteHandlerExample-1", (req, res, next) => {
  */
 
 // separating the route handlers brings no difference, but maintain the code order.
-app.use("/multipleRouteHandlerExample-2", (req, res, next)=> {
+app.use("/multipleRouteHandlerExample-2", (req, res, next) => {
     console.log("LOG:: Route handler 1");
     next();
 });
 
-app.use("/multipleRouteHandlerExample-2", (req, res, next)=> {
+app.use("/multipleRouteHandlerExample-2", (req, res, next) => {
     console.log("LOG:: Route handler 2");
     res.send("Route handler 2");
     // next();
@@ -127,7 +127,7 @@ app.use("/multipleRouteHandlerExample-2", (req, res, next)=> {
 //     next();
 // });
 
-app.use("/multipleRouteHandlerExample-3", (req, res, next)=> {
+app.use("/multipleRouteHandlerExample-3", (req, res, next) => {
     console.log("LOG:: Route handler for /multipleRouteHandlerExample-3");
     // res.send("route handler for /multipleRouteHandlerExample-3");
     // next();
@@ -182,6 +182,31 @@ app.get("/user/profile", userAuthMiddleware, (req, res) => {
 app.get("/user/login", (req, res) => {
     // no need to add middleware, login api should be open.
     res.send("Welcome to the user login!");
+});
+
+/**
+ * error handle: there are one more parameter in route handler callback at 1st position (if we put 2 parameters, it wiil be request and response, if 3, it will be request, response, next, if 4, it will be error, request, response, next).
+ * 
+ * before we use app.use() at beginning to use middleware. but to handle error, we need to use app.use() at the end. so that it will catch all the errors thrown from the route handlers and middlewares.
+ * 
+ */
+
+app.get("/errorExample-1", (req, res) => {
+    throw new Error("This is an example error!");
+});
+
+app.get("/errorExample-2", (req, res) => {
+    throw new Error("This is another example error!");
+});
+
+app.use("/", (err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send(err.message);
+    /**
+     * this is not the good way to hanlde error. but because there are option like this. so we can see the uses.
+     * 
+     * the best way to hanlde error is to use try-catch.
+     */
 });
 
 app.listen(3000, () => {
