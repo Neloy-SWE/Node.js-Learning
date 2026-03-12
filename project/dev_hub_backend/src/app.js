@@ -1,4 +1,5 @@
 import express from 'express';
+import { userAuthMiddleware } from './middleware/auth.js';
 
 const app = express();
 /**
@@ -12,7 +13,7 @@ const app = express();
  * 
  */
 // app.use("/",(req, res)=> {
-// // we can call this callback is a Route handler method
+// // we can call this callback is a Route handler function
 //     res.send("Hello form the server!");
 // });
 
@@ -52,14 +53,14 @@ const app = express();
 // });
 
 /**
- * use() method is used to define a route handler for all the HTTP methods (GET, POST, PUT, DELETE, etc.). but get(), post(), put(), delete() methods are used to define a route handler for specific HTTP methods.
+ * use() function is used to define a route handler for all the HTTP functions (GET, POST, PUT, DELETE, etc.). but get(), post(), put(), delete() functions are used to define a route handler for specific HTTP functions.
  */
 
 app.use("/infinity", (req, res) => { }); // not returning any response will cause the request to hang and will not send any response to the client and will keep the connection open until it times out.
 
 // multiple route handler
 // we can also add all route handlers in an array like this: app.use("/multipleRouteHandler", [routeHandler1, routeHandler2, routeHandler3] or [routeHandler1, routeHandler2], routeHandler3 or routeHandler1, [routeHandler2], routeHandler3);
-app.use("/multipleRouteHandler", (req, res, next) => {
+app.use("/multipleRouteHandlerExample-1", (req, res, next) => {
     console.log("LOG:: Route handler 1");
     // res.send("Route handler 1");
     /**
@@ -105,6 +106,83 @@ app.use("/multipleRouteHandler", (req, res, next) => {
  * there are one more parameter called "next" which is a function that we can call to move to the next route handler while not sending any response from the current route handler.
  */
 
+// separating the route handlers brings no difference, but maintain the code order.
+app.use("/multipleRouteHandlerExample-2", (req, res, next)=> {
+    console.log("LOG:: Route handler 1");
+    next();
+});
+
+app.use("/multipleRouteHandlerExample-2", (req, res, next)=> {
+    console.log("LOG:: Route handler 2");
+    res.send("Route handler 2");
+    // next();
+});
+
+/**
+ * when client request to a express server, server will check all the router one by one and try to find the matching route and execute. server execute the first matching route and if inside the route handler, next() function is called then it will move to the next matching route and execute that route handler.
+ */
+// app.use("/", (req, res, next)=> {
+//     console.log("LOG:: Route handler for /");
+//     res.send("Hello from the server!");
+//     next();
+// });
+
+app.use("/multipleRouteHandlerExample-3", (req, res, next)=> {
+    console.log("LOG:: Route handler for /multipleRouteHandlerExample-3");
+    // res.send("route handler for /multipleRouteHandlerExample-3");
+    // next();
+});
+
+/**
+ * middleware: it is a function that has access to the request and response objects and can modify them or perform some operations before sending the response to the client. it can also call the next() function to move to the next middleware or route handler.
+ * 
+ * here, all the callbacks of use or other request handler functions are middleware because they have access to the request and response objects and can modify them or perform some operations before sending the response to the client and callbacks that actually send a response to the client are called route handlers.
+ * 
+ * we can also call route handler as request handler.
+ * 
+ * there are one more function called app.all(). this function will execute for all the HTTP functions when the route is exactly matched like if we set app.all("/test", callback) then it will not execute for "/test/abc" but will execute for "/test" only. but if we want to talk about app.use() function then it will execute for all the HTTP functions when the route is matched like if we set app.use("/test", callback) then it will execute for both "/test" and "/test/abc".
+ * 
+ * app.all() function is used to define a route handler and app.use() function is used to define a middleware.
+ */
+
+// middleware example
+app.use("/admin", (req, res, next) => {
+    console.log("token checking...");
+    const token = "exampleToken";
+    // const token = "exampleToke"; // to check the unauthorized case
+    if (token === "exampleToken") {
+        next();
+    } else {
+        res.status(401).send("Unauthorized");
+    }
+});
+
+app.get("/admin/dashboard", (req, res) => {
+    res.send("Welcome to the admin dashboard!");
+});
+
+app.post("/admin/create-user", (req, res) => {
+    res.send("User created successfully!");
+});
+
+app.delete("/admin/delete-user", (req, res) => {
+    res.send("User deleted successfully!");
+});
+
+// let's create middleware in separate file and import it here
+// app.use("/user", userAuthMiddleware);
+
+// we can also avoid app.use and directly add the middleware to the route handler.
+// app.get("/user/profile", (req, res) => {
+app.get("/user/profile", userAuthMiddleware, (req, res) => {
+    res.send("Welcome to the user profile!");
+});
+
+// if we do not define app.use(), then we can put middleware wherever we want.
+app.get("/user/login", (req, res) => {
+    // no need to add middleware, login api should be open.
+    res.send("Welcome to the user login!");
+});
 
 app.listen(3000, () => {
     console.log("Server is running on port 3000");
