@@ -4,15 +4,27 @@ import { User } from "./model/user.js";
 
 const app = express();
 
-app.post("/signup", async (req, res) => {
-    const userObject = {
-        firstName: "Neloy",
-        LastName: "Neel",
-        emailId: "neloy@gmail.com",
-        password: "123456789",
-    }
+app.use(express.json()); // Middleware to parse JSON bodies
 
-    const user = new User(userObject);
+app.post("/signup", async (req, res) => {
+    console.log(req.body);
+    /**
+     * if we do add line 7, then req.body will be undefined, because client is sending data in json object format, and we need it in javascript object format. here, middleware can be a good solution to handle all api's req.body.
+     * 
+     * express has a built-in middleware called express.json() that parses incoming JSON requests and puts the parsed data in req.body.
+     */
+
+    // const userObject = {
+    //     firstName: "Neloy",
+    //     LastName: "Neel",
+    //     emailId: "neloy@gmail.com",
+    //     password: "123456789",
+    // };
+
+    // const userObject = req.body;
+    // const user = new User(userObject);
+    const user = new User(req.body);
+
     try {
         await user.save(); // this will return a promise.
         res.send("User created successfully!");
