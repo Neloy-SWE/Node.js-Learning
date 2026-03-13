@@ -1,6 +1,7 @@
 import express from "express";
 import { connectDB } from "./config/database.js";
 import { User } from "./model/user.js";
+import { validatorFields } from "./validator/validator_fields.js";
 
 const app = express();
 
@@ -26,6 +27,21 @@ app.post("/signup", async (req, res) => {
     const user = new User(req.body);
 
     try {
+
+        const allowFields = [
+            "firstName",
+            "lastName",
+            "emailId",
+            "password",
+            "age",
+            "gender",
+            "photoUrl",
+            "about",
+            "skills"
+        ];
+
+        validatorFields(req.body, allowFields);
+
         await user.save(); // this will return a promise.
         res.send("User created successfully!");
     } catch (err) {
@@ -77,10 +93,36 @@ app.delete("/user", async (req, res) => {
     }
 });
 
-app.patch("/user", async (req, res) => {
-    const userId = req.body.userId;
+app.patch("/user/:userId", async (req, res) => {
+    // const userId = req.query?.userId;
+    /**
+     * use req.query when we want to send data using query params like: /user?userId=12345. for this no need to add /user/:userId in the url path.
+     */
+    const userId = req.params?.userId;
+    /**
+     * use req.params when we want to send data using url params like /user/12345. for this we need to add /user/:userId in the url path.
+     */
+
     const data = req.body;
+
     try {
+
+        const allowFieldsForUpdates = [
+            "firstName",
+            "lastName",
+            "age",
+            "gender",
+            "about",
+            "skills",
+            "photoUrl",
+        ];
+
+        validatorFields(data, allowFieldsForUpdates);
+
+        if (data?.skills.length > 10) {
+            throw new Error("You can add maximum 10 skills!");
+        }
+
         const user = await User.findByIdAndUpdate({ _id: userId }, data, {
             returnDocument: "after",
             runValidators: true,
