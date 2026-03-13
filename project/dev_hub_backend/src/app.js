@@ -80,15 +80,20 @@ app.delete("/user", async (req, res) => {
 app.patch("/user", async (req, res) => {
     const userId = req.body.userId;
     const data = req.body;
-    try{
-        const user = await User.findByIdAndUpdate({_id: userId}, data, {returnDocument: "after"});
+    try {
+        const user = await User.findByIdAndUpdate({ _id: userId }, data, {
+            returnDocument: "after",
+            runValidators: true,
+        });
         /**
          * by default, findByIdAndUpdate() returns the document as it was before the update was applied. if we want to get the updated document, we can pass an options object with the returnDocument property set to "after". this way, it will return the document after the update was applied.
+         * 
+         * by default, validation is false, so that when we try to update any field that has validate function will not work here. so we need to set 
          */
         console.log(user);
         res.send("User updated succesfully!");
-    } catch (err){
-        res.status(400).send("Something went wrong!");
+    } catch (err) {
+        res.status(400).send(err.message);
     }
 })
 
