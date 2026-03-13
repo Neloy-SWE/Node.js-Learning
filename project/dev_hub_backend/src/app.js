@@ -29,10 +29,68 @@ app.post("/signup", async (req, res) => {
         await user.save(); // this will return a promise.
         res.send("User created successfully!");
     } catch (err) {
-        res.status(400).send("User creation failed!");
+        res.status(400).send(err.message);
     }
 
 });
+
+app.get("/user", async (req, res) => {
+    const emailId = req.body.emailId;
+
+    try {
+        // const users = await User.find({ emailId: emailId }); // find() returns array.
+        // if (users.length === 0) {
+        //     res.status(404).send("User not found!");
+        // } else {
+        //     res.send(users);
+        // }
+
+        const user = await User.findOne({ emailId: emailId }); // findOne() returns single document.
+        if (!user) {
+            res.status(404).send("User not found!");
+        } else {
+            res.send(user);
+        }
+    } catch (err) {
+        res.status(400).send("Something went wrong!");
+    }
+
+});
+
+app.get("/feed", async (req, res) => {
+    try {
+        const users = await User.find();
+        res.send(users);
+    } catch (err) {
+        res.status(400).send("Something went wrong!");
+    }
+});
+
+app.delete("/user", async (req, res) => {
+    const userId = req.body.userId;
+
+    try {
+        await User.findByIdAndDelete({ _id: userId });
+        res.send("User deleted successfully!");
+    } catch (err) {
+        res.status(400).send("Something went wrong!");
+    }
+});
+
+app.patch("/user", async (req, res) => {
+    const userId = req.body.userId;
+    const data = req.body;
+    try{
+        const user = await User.findByIdAndUpdate({_id: userId}, data, {returnDocument: "after"});
+        /**
+         * by default, findByIdAndUpdate() returns the document as it was before the update was applied. if we want to get the updated document, we can pass an options object with the returnDocument property set to "after". this way, it will return the document after the update was applied.
+         */
+        console.log(user);
+        res.send("User updated succesfully!");
+    } catch (err){
+        res.status(400).send("Something went wrong!");
+    }
+})
 
 connectDB().then(() => {
     console.log("Database connected successfully!");
