@@ -2,6 +2,8 @@ import express from "express";
 import { connectDB } from "./config/database.js";
 import { User } from "./model/user.js";
 import { validatorFields } from "./validator/validator_fields.js";
+import bcrypt from "bcrypt";
+import validator from 'validator';
 
 const app = express();
 
@@ -10,7 +12,7 @@ app.use(express.json()); // Middleware to parse JSON bodies
 app.post("/signup", async (req, res) => {
     console.log(req.body);
     /**
-     * if we do add line 7, then req.body will be undefined, because client is sending data in json object format, and we need it in javascript object format. here, middleware can be a good solution to handle all api's req.body.
+     * if we do not add app.use(express.json()), then req.body will be undefined, because client is sending data in json object format, and we need it in javascript object format. here, middleware can be a good solution to handle all api's req.body.
      * 
      * express has a built-in middleware called express.json() that parses incoming JSON requests and puts the parsed data in req.body.
      */
@@ -24,7 +26,7 @@ app.post("/signup", async (req, res) => {
 
     // const userObject = req.body;
     // const user = new User(userObject);
-    const user = new User(req.body);
+
 
     try {
 
@@ -42,12 +44,40 @@ app.post("/signup", async (req, res) => {
 
         validatorFields(req.body, allowFields);
 
+        const { firstName, lastName, emailId, password } = req.body;
+        const passwordHash = await bcrypt.hash(password, 10);
+
+        const user = new User({
+            firstName,
+            lastName,
+            emailId,
+            password: passwordHash
+        }
+        );
+
         await user.save(); // this will return a promise.
         res.send("User created successfully!");
     } catch (err) {
         res.status(400).send(err.message);
     }
 
+});
+
+app.post("/login", async (req, res) => {
+    try {
+        const { emailId, password } = req.body;
+        if (!validator.isEmail(emailId)) {
+            throw new Error(emailId + " is not a valid email");
+        }
+
+        const user = await User.findOne({ emailId: emailId });
+        if (!user || !(await bcrypt.compare(password, user.password))) {
+            throw new Error("Wrong credential!");
+        }
+        res.send("Login successful!");
+    } catch (err) {
+        res.status(400).send(err.message);
+    }
 });
 
 app.get("/user", async (req, res) => {
@@ -68,7 +98,7 @@ app.get("/user", async (req, res) => {
             res.send(user);
         }
     } catch (err) {
-        res.status(400).send("Something went wrong!");
+        res.status(400).send(err.message);
     }
 
 });
@@ -78,7 +108,7 @@ app.get("/feed", async (req, res) => {
         const users = await User.find();
         res.send(users);
     } catch (err) {
-        res.status(400).send("Something went wrong!");
+        res.status(400).send(err.message);
     }
 });
 
@@ -89,7 +119,7 @@ app.delete("/user", async (req, res) => {
         await User.findByIdAndDelete({ _id: userId });
         res.send("User deleted successfully!");
     } catch (err) {
-        res.status(400).send("Something went wrong!");
+        res.status(400).send(err.message);
     }
 });
 
@@ -118,10 +148,6 @@ app.patch("/user/:userId", async (req, res) => {
         ];
 
         validatorFields(data, allowFieldsForUpdates);
-
-        if (data?.skills && data?.skills.length > 10) {
-            throw new Error("You can add maximum 10 skills!");
-        }
 
         const user = await User.findByIdAndUpdate({ _id: userId }, data, {
             returnDocument: "after",
