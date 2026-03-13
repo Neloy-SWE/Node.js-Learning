@@ -119,7 +119,7 @@ app.patch("/user/:userId", async (req, res) => {
 
         validatorFields(data, allowFieldsForUpdates);
 
-        if (data?.skills.length > 10) {
+        if (data?.skills && data?.skills.length > 10) {
             throw new Error("You can add maximum 10 skills!");
         }
 
