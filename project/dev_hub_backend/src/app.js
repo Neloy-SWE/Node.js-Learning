@@ -91,13 +91,19 @@ app.post("/login", async (req, res) => {
     }
 });
 
-app.get("/profile/:userId", userAuthMiddleware, async (req, res) => {
+// app.get("/profile/:userId", userAuthMiddleware, async (req, res) => {
+app.get("/profile", userAuthMiddleware, async (req, res) => {
     try {
         const user = req.user;
         res.send(user);
     } catch (err) {
         res.status(400).send(err.message);
     }
+});
+
+app.post("/sendConnectionRequest",userAuthMiddleware, async (req, res) => {
+
+    res.send("Request sent!");
 });
 
 app.get("/user", async (req, res) => {
@@ -178,7 +184,7 @@ app.patch("/user/:userId", async (req, res) => {
          * 
          * by default, validation is false, so that when we try to update any field that has validate function will not work here. so we need to set 
          */
-        console.log(user);
+        // console.log(user);
         res.send("User updated succesfully!");
     } catch (err) {
         res.status(400).send(err.message);
