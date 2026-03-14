@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import validator from 'validator';
 import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
+import { userAuthMiddleware } from "./middleware/auth.js"
 
 const app = express();
 
@@ -90,39 +91,10 @@ app.post("/login", async (req, res) => {
     }
 });
 
-app.get("/profile/:userId", async (req, res) => {
+app.get("/profile/:userId", userAuthMiddleware, async (req, res) => {
     try {
-        const { userId } = req.params;
-
-        const cookies = req.cookies;
-        const { token } = cookies;
-
-        if (!token) {
-            throw new Error("Unauthorized!");
-        }
-
-        const decodedMessage = jwt.verify(token, process.env.JWT_SECRET);
-        const { _id } = decodedMessage;
-        // console.log(_id, " is logged in!");
-
-        if (userId) {
-            if (userId == _id) {
-                const user = await User.findById({ _id: _id });
-                if (!user) {
-                    throw new Error("Login required!");
-                }
-                res.send(user);
-            }
-            else {
-                throw new Error("Unauthorized!");
-            }
-        }
-        else {
-            throw new Error("UserId is required!");
-        }
-
-
-
+        const user = req.user;
+        res.send(user);
     } catch (err) {
         res.status(400).send(err.message);
     }
