@@ -4,13 +4,16 @@ import { User } from "./model/user.js";
 import { validatorFields } from "./validator/validator_fields.js";
 import bcrypt from "bcrypt";
 import validator from 'validator';
+import cookieParser from "cookie-parser";
+import jwt from "jsonwebtoken";
 
 const app = express();
 
 app.use(express.json()); // Middleware to parse JSON bodies
+app.use(cookieParser()); // Middleware to parse cookies
 
 app.post("/signup", async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     /**
      * if we do not add app.use(express.json()), then req.body will be undefined, because client is sending data in json object format, and we need it in javascript object format. here, middleware can be a good solution to handle all api's req.body.
      * 
@@ -74,7 +77,52 @@ app.post("/login", async (req, res) => {
         if (!user || !(await bcrypt.compare(password, user.password))) {
             throw new Error("Wrong credential!");
         }
+        else {
+            const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+            // console.log(process.env.JWT_SECRET);
+            // console.log(token);
+            res.cookie("token", token);
+        }
+
         res.send("Login successful!");
+    } catch (err) {
+        res.status(400).send(err.message);
+    }
+});
+
+app.get("/profile/:userId", async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const cookies = req.cookies;
+        const { token } = cookies;
+
+        if (!token) {
+            throw new Error("Unauthorized!");
+        }
+
+        const decodedMessage = jwt.verify(token, process.env.JWT_SECRET);
+        const { _id } = decodedMessage;
+        // console.log(_id, " is logged in!");
+
+        if (userId) {
+            if (userId == _id) {
+                const user = await User.findById({ _id: _id });
+                if (!user) {
+                    throw new Error("Login required!");
+                }
+                res.send(user);
+            }
+            else {
+                throw new Error("Unauthorized!");
+            }
+        }
+        else {
+            throw new Error("UserId is required!");
+        }
+
+
+
     } catch (err) {
         res.status(400).send(err.message);
     }
