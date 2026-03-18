@@ -5,7 +5,7 @@ import { validatorFields } from "./validator/validator_fields.js";
 import bcrypt from "bcrypt";
 import validator from 'validator';
 import cookieParser from "cookie-parser";
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
 import { userAuthMiddleware } from "./middleware/auth.js"
 
 const app = express();
@@ -75,14 +75,15 @@ app.post("/login", async (req, res) => {
         }
 
         const user = await User.findOne({ emailId: emailId });
-        if (!user || !(await bcrypt.compare(password, user.password))) {
+        if (!user || !(await user.validatePassword(password))) {
             throw new Error("Wrong credential!");
         }
         else {
-            const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
-            // console.log(process.env.JWT_SECRET);
+            // const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: "8h" });
+            const token = await user.getJWT();
+            // console.log(process.env.JWT_SECRET); 
             // console.log(token);
-            res.cookie("token", token);
+            res.cookie("token", token, { expires: new Date(Date.now() + 8 * 3600000) }); // 8 hour
         }
 
         res.send("Login successful!");
@@ -101,9 +102,9 @@ app.get("/profile", userAuthMiddleware, async (req, res) => {
     }
 });
 
-app.post("/sendConnectionRequest",userAuthMiddleware, async (req, res) => {
-
-    res.send("Request sent!");
+app.post("/sendConnectionRequest", userAuthMiddleware, async (req, res) => {
+    const user = req.user;
+    res.send(user.firstName + " " + user.lastName + " sent you connection request!");
 });
 
 app.get("/user", async (req, res) => {

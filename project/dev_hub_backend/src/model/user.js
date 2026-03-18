@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import validator from 'validator';
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -64,5 +66,21 @@ const userSchema = new mongoose.Schema({
     timestamps: true
     // this will automatically add createdAt and updatedAt fields to the document.
 });
+
+userSchema.methods.getJWT = async function () {
+    const user = this;
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: "8h" });
+
+    return token;
+}
+
+userSchema.methods.validatePassword = async function (passwordFromRequest) {
+    const user = this;
+    const passwordHash = user.password;
+
+    const isPasswordValidate = await bcrypt.compare(passwordFromRequest, passwordHash);
+    // console.log("checking password validation: ", isPasswordValidate);
+    return isPasswordValidate;
+}
 
 export const User = mongoose.model("User", userSchema);
