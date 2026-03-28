@@ -24,13 +24,17 @@ authRouter.post("/signup", async (req, res) => {
         validatorFields(req.body, allowFields);
 
         const { firstName, lastName, emailId, password } = req.body;
-        const passwordHash = await bcrypt.hash(password, 10);
+        if (!validator.isStrongPassword(password)) {
+            throw new Error("please add a strong password");
+        }
+        const passwordHash = await bcrypt.hash(password, 10); // this can bypass schema level verification
 
         const user = new User({
             firstName,
             lastName,
             emailId,
             password: passwordHash
+            // password: password
         }
         );
 

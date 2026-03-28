@@ -1,7 +1,8 @@
 import express from "express";
 import { userAuthMiddleware } from "../middleware/auth.js";
-import { User } from "../model/user.js";
 import { validatorFields } from "../validator/validator_fields.js";
+import bcrypt from "bcrypt";
+import validator from 'validator';
 
 const profileRouter = express.Router();
 
@@ -38,6 +39,35 @@ profileRouter.patch("/profile/edit", userAuthMiddleware, async (req, res) => {
         // we can also send json as response:
         res.json({ message: "User updated succesfully!", data: user });
     }
+    catch (err) {
+        res.status(400).send(err.message);
+    }
+});
+
+profileRouter.patch("/profile/update-password", userAuthMiddleware, async (req, res) => {
+    try {
+        const data = req.body;
+        console.log(data);
+        const allowedFieldsForPassword = ["currentPassword", "newPassword"];
+        validatorFields(data, allowedFieldsForPassword);
+        console.log("after validation");
+
+        const user = req.user;
+        if (!await user.validatePassword(data.currentPassword)) {
+            throw new Error("Inputted current password is wrong!")
+        }
+
+        const { newPassword } = data;
+        if (!validator.isStrongPassword(newPassword)) {
+            throw new Error("please add a strong password");
+        }
+        const passwordHash = await bcrypt.hash(newPassword, 10);
+        user.password = passwordHash;
+        await user.save();
+        res.send("password updated");
+
+    }
+
     catch (err) {
         res.status(400).send(err.message);
     }
