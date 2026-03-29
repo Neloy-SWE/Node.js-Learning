@@ -14,11 +14,11 @@ authRouter.post("/signup", async (req, res) => {
             "lastName",
             "emailId",
             "password",
-            "age",
-            "gender",
-            "photoUrl",
-            "about",
-            "skills"
+            // "age",
+            // "gender",
+            // "photoUrl",
+            // "about",
+            // "skills"
         ];
 
         validatorFields(req.body, allowFields);
