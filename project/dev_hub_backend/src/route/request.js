@@ -21,6 +21,8 @@ requestRouter.post("/request/send/:status/:toUserId", userAuthMiddleware, async 
             error.statusCode = 404;
             throw error;
         }
+
+        // not working as expected.
         // if (ObjectId.isValid(toUserId.toString()) === false) {
         //     throw new Error("Invalid interested user id!");
         // }
@@ -39,7 +41,19 @@ requestRouter.post("/request/send/:status/:toUserId", userAuthMiddleware, async 
             }
         );
         if (isRequestAlreadySent) {
-            throw new Error("You have already sent connection request to this user!");
+            if (isRequestAlreadySent.status === "interested"){
+                throw new Error("You have already sent connection request to this user!");
+            }
+            else if (isRequestAlreadySent.status === "ignored"){
+                throw new Error("You have already ignored connection request from this user!");
+            }
+            else if (isRequestAlreadySent.status === "accepted"){
+                throw new Error("You are already connected with this user!");
+            }
+            else if (isRequestAlreadySent.status === "rejected"){
+                throw new Error("You have already rejected connection request from this user!");
+            }
+            
         }
 
         const connectionRequest = new ConnectionRequest({
