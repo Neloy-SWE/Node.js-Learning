@@ -1,6 +1,7 @@
 import express from "express";
 import { userAuthMiddleware } from "../middleware/auth.js";
 import { ConnectionRequest } from "../model/connection_request.js";
+import { User } from "../model/user.js";
 
 const requestRouter = express.Router();
 
@@ -14,11 +15,29 @@ requestRouter.post("/request/send/:status/:toUserId", userAuthMiddleware, async 
         if (!allowedStatus.includes(status)) {
             throw new Error("Invalid status!");
         }
+        const toUser = await User.findById(toUserId);
+        if (!toUser) {
+            const error = new Error("Interested user not found!");
+            error.statusCode = 404;
+            throw error;
+        }
+        // if (ObjectId.isValid(toUserId.toString()) === false) {
+        //     throw new Error("Invalid interested user id!");
+        // }
+
         if (fromUserId.toString() === toUserId) {
             throw new Error("You can't send connection request to yourself!");
         }
 
-        const isRequestAlreadySent = await ConnectionRequest.findOne({ fromUserId, toUserId });
+        const isRequestAlreadySent = await ConnectionRequest.findOne(
+
+            {
+                $or: [
+                    { fromUserId, toUserId },
+                    { fromUserId: toUserId, toUserId: fromUserId }
+                ]
+            }
+        );
         if (isRequestAlreadySent) {
             throw new Error("You have already sent connection request to this user!");
         }
@@ -33,7 +52,7 @@ requestRouter.post("/request/send/:status/:toUserId", userAuthMiddleware, async 
         res.json({ message: "Connection request sent successfully!", data });
 
     } catch (err) {
-        res.status(400).send(err.message);
+        res.status(err.statusCode || 400).json({ message: err.message });
     }
 });
 
