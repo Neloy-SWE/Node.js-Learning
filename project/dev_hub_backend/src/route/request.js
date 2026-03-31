@@ -70,4 +70,39 @@ requestRouter.post("/request/send/:status/:toUserId", userAuthMiddleware, async 
     }
 });
 
+requestRouter.post("/request/review/:status/:requestId", userAuthMiddleware, async (req, res) => {
+
+    try {
+        const { status, requestId } = req.params;
+
+        const allowedStatus = ["accepted", "rejected"];
+        if (!allowedStatus.includes(status)) {
+            throw new Error("Invalid status!");
+        }
+
+        const user = req.user;
+        const connectionRequest = await ConnectionRequest.findOne({
+            _id: requestId,
+            toUserId: user._id,
+            status: "interested",
+        });
+
+        if (!connectionRequest) {
+            const error = new Error("Connection request not found!");
+            error.statusCode = 404;
+            throw error;
+        }
+
+        connectionRequest.status = status;
+        const data = await connectionRequest.save();
+        res.json({
+            message: "Connection request " + status,
+            data,
+        });
+
+    } catch (err) {
+        res.status(err.statusCode || 400).json({ message: err.message });
+    }
+});
+
 export { requestRouter };
