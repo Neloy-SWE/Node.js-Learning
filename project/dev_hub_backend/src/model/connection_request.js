@@ -3,10 +3,12 @@ import mongoose from "mongoose";
 const connectionRequestSchema = new mongoose.Schema({
     fromUserId: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: "User", // reference to the User model. we must need to set ref for fields that hold _id of another collection. otherwise populate will not work.
         required: true,
     },
     toUserId: {
         type: mongoose.Schema.Types.ObjectId,
+        // ref: "User",
         required: true,
     },
     status: {
