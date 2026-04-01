@@ -44,13 +44,13 @@ requestRouter.post("/request/send/:status/:toUserId", userAuthMiddleware, async 
 
             switch (isRequestAlreadySent.status) {
                 case "interested":
-                    throw new Error("You have already sent connection request to this user!");
+                    throw new Error("there is a pending connection request between you!");
                 case "ignored":
-                    throw new Error("You have already ignored connection request from this user!");
+                    throw new Error("This connection request has been ignored already!");
                 case "accepted":
                     throw new Error("You are already connected with this user!");
                 case "rejected":
-                    throw new Error("You have already rejected connection request from this user!");
+                    throw new Error("This connection request has been rejected already!");
                 default:
                     throw new Error("Contact developer!");
             }

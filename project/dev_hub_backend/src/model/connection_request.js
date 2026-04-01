@@ -37,14 +37,12 @@ connectionRequestSchema.index({ fromUserId: 1, toUserId: 1 });
  * creating to much index will make the write operation slower because it has to update the index as well. it causes reduced write performance (slower inserts/updates). so we should create index only on the fields which are frequently used in the query and we should avoid creating index on the fields which are frequently updated.
  */
 
-connectionRequestSchema.pre("save", async function (next) {
+connectionRequestSchema.pre("save", async function () {
 
     const connectionRequest = this;
     if (connectionRequest.fromUserId.equals(connectionRequest.toUserId)) {
         throw new Error("You can't send connection request to yourself!");
     }
-
-    next();
 });
 
 export const ConnectionRequest = mongoose.model("ConnectionRequest", connectionRequestSchema);
