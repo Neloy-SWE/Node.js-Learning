@@ -37,7 +37,7 @@ userRouter.get("/user/pending-requests", userAuthMiddleware, async (req, res) =>
 userRouter.get("/user/connections", userAuthMiddleware, async (req, res) => {
     try {
         const user = req.user;
-        
+
         const connections = await ConnectionRequest.find(
             {
                 $or: [
@@ -50,11 +50,19 @@ userRouter.get("/user/connections", userAuthMiddleware, async (req, res) => {
             userSaveData
         );
 
-        // const data = connections.map((row) => row.fromUserId);
+        const data = connections.map((row) => {
+            if (row.fromUserId._id.equals(user._id)) {
+                return row.toUserId;
+            }
+            else {
+                return row.fromUserId;
+            }
+        });
 
         res.json(
             {
-                data: connections
+                // data: connections
+                data
             }
         )
 
