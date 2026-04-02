@@ -1,7 +1,7 @@
 import express from "express";
 import { userAuthMiddleware } from "../middleware/auth.js";
 import { ConnectionRequest } from "../model/connection_request.js";
-// import { User } from "../model/user.js";
+import { User } from "../model/user.js";
 
 const userSaveData = "firstName lastName photoUrl gender skills about";
 
@@ -66,6 +66,42 @@ userRouter.get("/user/connections", userAuthMiddleware, async (req, res) => {
             }
         )
 
+    } catch (err) {
+        res.status(err.statusCode || 400).json({ message: err.message });
+    }
+});
+
+userRouter.get("/feed", userAuthMiddleware, async (req, res) => {
+    try {
+        const user = req.user;
+
+        const connections = await ConnectionRequest.find(
+            {
+                $or: [
+                    {
+                        fromUserId: user._id
+                    },
+                    {
+                        toUserId: user._id
+                    }
+                ]
+            }
+        ).select("fromUserId toUserId");
+
+        const hideUserFromFeed = new Set();
+        connections.forEach((request) => {
+            hideUserFromFeed.add(request.fromUserId.toString());
+            hideUserFromFeed.add(request.toUserId.toString());
+        });
+
+        const feedUsers = await User.find({
+            $and: [
+                { _id: { $nin: Array.from(hideUserFromFeed) } },
+                { _id: { $ne: user._id } }
+            ]
+        }).select(userSaveData);
+
+        res.send(feedUsers);
     } catch (err) {
         res.status(err.statusCode || 400).json({ message: err.message });
     }
