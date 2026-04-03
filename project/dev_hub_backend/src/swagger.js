@@ -9,8 +9,8 @@ const port = process.env.PORT;
 
 const doc = {
   info: {
-    title: 'My API',
-    description: 'Description'
+    title: 'DevHub API',
+    description: 'Node.js backend application.'
   },
   host: 'localhost:${port}'
 };

@@ -75,6 +75,11 @@ userRouter.get("/feed", userAuthMiddleware, async (req, res) => {
     try {
         const user = req.user;
 
+        const page = parseInt(req.query.page) || 1;
+        let limit = parseInt(req.query.limit) || 10;
+        limit = limit> 50 ? 50 : limit;
+        const skip = (page - 1) * limit;
+
         const connections = await ConnectionRequest.find(
             {
                 $or: [
@@ -99,7 +104,7 @@ userRouter.get("/feed", userAuthMiddleware, async (req, res) => {
                 { _id: { $nin: Array.from(hideUserFromFeed) } },
                 { _id: { $ne: user._id } }
             ]
-        }).select(userSaveData);
+        }).select(userSaveData).skip(skip).limit(limit);
 
         res.send(feedUsers);
     } catch (err) {
