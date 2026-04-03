@@ -100,26 +100,26 @@ npm run dev
 
 ### Auth
 
-POST /signup
-POST /login
-POST /logout
+- POST /signup
+- POST /login
+- POST /logout
 
 ### Profile
 
-GET /profile/view
-PATCH /profile/edit
-PATCH /profile/update-password
+- GET /profile/view
+- PATCH /profile/edit
+- PATCH /profile/update-password
 
 ### Requests
 
-POST /request/send/:status/:toUserId
-POST /request/review/:status/:requestId
+- POST /request/send/:status/:toUserId
+- POST /request/review/:status/:requestId
 
 ### Users
 
-GET /user/pending-requests
-GET /user/connections
-GET /feed
+- GET /user/pending-requests
+- GET /user/connections
+- GET /feed
 
 ## Authentication
 
