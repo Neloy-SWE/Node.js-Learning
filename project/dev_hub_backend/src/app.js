@@ -9,11 +9,20 @@ import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
 import swaggerUi from 'swagger-ui-express';
 import swaggerFile from './swagger-output.json' with {type: "json"};
+import cors from 'cors';
 
 const myEnv = dotenv.config();
 dotenvExpand.expand(myEnv);
 
 const app = express();
+
+app.use(cors(
+    {
+        origin: process.env.FRONTEND_BASE_URL,
+        credentials: true
+    }
+));
+
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 const port = process.env.PORT;
