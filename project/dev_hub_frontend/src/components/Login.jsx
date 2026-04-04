@@ -1,12 +1,33 @@
 import axios from "axios";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
+import { useNavigate } from "react-router";
+import { BASE_URL } from "../utils/constants";
 
 const Login = () => {
-    const [emailId, setEmailId] = useState("");
-    const [password, setPassword] = useState("");
+    const [emailId, setEmailId] = useState("jobbar@gmail.com");
+    const [password, setPassword] = useState("#Jobbar12#");
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleLogin = async () => {
-        axios.post("")
+        try {
+            const result = await axios.post(
+                BASE_URL + "/login",
+                {
+                    emailId,
+                    password,
+                },
+                {
+                    withCredentials: true,
+                }
+            );
+            dispatch(addUser(result.data));
+            navigate("/");
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     return (
@@ -33,13 +54,13 @@ const Login = () => {
                                 <input
                                     type="password"
                                     value={password}
-                                    className="input w-full" placeholder="*-*-*-*" 
+                                    className="input w-full" placeholder="*-*-*-*"
                                     onChange={(e) => setPassword(e.target.value)}
-                                    />
+                                />
                             </fieldset>
                         </div>
                         <div className="card-actions justify-center mt-5">
-                            <button className="btn btn-primary btn-block">Login</button>
+                            <button className="btn btn-primary btn-block" onClick={handleLogin}>Login</button>
                         </div>
                     </div>
                 </div>
