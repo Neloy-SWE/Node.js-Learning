@@ -12,7 +12,7 @@ const doc = {
     title: 'DevHub API',
     description: 'Node.js backend application.'
   },
-  host: 'localhost:${port}'
+  host: `localhost:${port}`,
 };
 
 const outputFile = './swagger-output.json';

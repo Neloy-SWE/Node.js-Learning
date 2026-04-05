@@ -7,13 +7,17 @@ export const userAuthMiddleware = async (req, res, next) => {
 
         const { token } = req.cookies;
         if (!token) {
-            throw new Error("Unauthorized!");
+            const error = new Error("Unauthorized!");
+            error.statusCode = 401;
+            throw error;
         }
 
         const decodedObject = jwt.verify(token, process.env.JWT_SECRET);
         const { _id } = decodedObject;
         if (!_id) {
-            throw new Error("Unauthorized!");
+            const error = new Error("Unauthorized!");
+            error.statusCode = 401;
+            throw error;
         }
         // if (userId) {
         // if (userId == _id) {
@@ -33,6 +37,6 @@ export const userAuthMiddleware = async (req, res, next) => {
         // }
 
     } catch (err) {
-        res.status(400).send(err.message);
+        res.status(err.statusCode || 400).json({ message: err.message });
     }
 };
