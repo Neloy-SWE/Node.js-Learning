@@ -1,6 +1,6 @@
 import axios from "axios";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router";
 import { BASE_URL } from "../utils/constants";
@@ -10,6 +10,8 @@ const Login = () => {
     const [password, setPassword] = useState("#Jobbar12#");
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const user = useSelector((state) => state.user);
+
 
     const handleLogin = async () => {
         try {
@@ -30,8 +32,22 @@ const Login = () => {
         }
     }
 
+    // const path = window.location.pathname;
+    // console.log(path);
+    const redirection = () => {
+        if (user) {
+            navigate("/feed");
+            console.log("feed checked");
+        }
+    }
+
+    useEffect(() => {
+        redirection();
+    }, [user]);
+
     return (
         <>
+        
             <div className="flex justify-center my-10">
                 <div className="card card-border bg-base-300 w-96 shadow-xl">
                     <div className="card-body">
