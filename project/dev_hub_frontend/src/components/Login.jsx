@@ -37,7 +37,7 @@ const Login = () => {
     const redirection = () => {
         if (user) {
             navigate("/feed");
-            console.log("feed checked");
+            // console.log("feed checked");
         }
     }
 
