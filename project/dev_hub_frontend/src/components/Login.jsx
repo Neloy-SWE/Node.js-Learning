@@ -11,6 +11,7 @@ const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector((state) => state.user);
+    const [error, setError] = useState("");
 
 
     const handleLogin = async () => {
@@ -28,6 +29,7 @@ const Login = () => {
             dispatch(addUser(result.data));
             navigate("/feed");
         } catch (err) {
+            setError(err?.response?.data || "Something went wrong");
             console.log(err);
         }
     }
@@ -75,6 +77,7 @@ const Login = () => {
                                 />
                             </fieldset>
                         </div>
+                        <p className="text-error">{error}</p>
                         <div className="card-actions justify-center mt-5">
                             <button className="btn btn-primary btn-block" onClick={handleLogin}>Login</button>
                         </div>
