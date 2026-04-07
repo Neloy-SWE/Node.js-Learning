@@ -1,7 +1,9 @@
+import EditProfile from "./EditProfile";
+
 const Profile = () => {
     return(
         <>
-        <h1>Profile section</h1>
+        <EditProfile />
         </>
     );
 }
