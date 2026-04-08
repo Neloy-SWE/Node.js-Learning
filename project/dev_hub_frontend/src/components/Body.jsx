@@ -35,7 +35,8 @@ const Body = () => {
     };
 
     useEffect(() => {
-        if (!uesrData) {
+        if (!uesrData && window.location.pathname !== "/login") {
+        // if (!uesrData) {
             fetchUser();
         }
     }, []);
