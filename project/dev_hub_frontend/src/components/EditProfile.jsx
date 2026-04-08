@@ -145,7 +145,7 @@ const EditProfile = ({ user }) => {
                     </div>
                 </div>
 
-                <UserCard user={{ firstName, lastName, photoUrl, age, gender, about }} />
+                <UserCard user={{ firstName, lastName, photoUrl, age, gender, about }} needAction={false} />
             </div>
 
             {showToast && (<div className="toast toast-top toast-center">
