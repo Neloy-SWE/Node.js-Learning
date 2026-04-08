@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { addRequests } from "../utils/requestSlice";
+import { addRequests, removeRequests } from "../utils/requestSlice";
 import { useEffect } from "react";
 import { BASE_URL } from "../utils/constants";
 
@@ -8,6 +8,15 @@ const Request = () => {
 
     const requests = useSelector((state) => state.requests);
     const dispatch = useDispatch();
+
+    const reviewReqest = async (status, requestId) => {
+        try {
+            const result = await axios.post(BASE_URL + `/request/review/${status}/${requestId}`, {}, { withCredentials: true });
+            dispatch(removeRequests(requestId));
+        } catch (err) {
+            console.error("Error reviewing request:", err);
+        }
+    }
 
     const fetchRequests = async () => {
         try {
@@ -20,6 +29,14 @@ const Request = () => {
             console.log(err);
         }
     }
+
+    // function checkOnload() {
+    //     console.log("hi");
+    // }
+
+    // function checkOnloadWithParam(param) {
+    //     console.log("hi", param);
+    // }
 
     useEffect(() => {
         fetchRequests();
@@ -49,8 +66,25 @@ const Request = () => {
                             </div>
 
                             <div>
-                                <button className="btn btn-success mx-2">Interested</button>
-                                <button className="btn btn-error mx-2">Rejected</button>
+                                {/* 
+                                  * <button className="btn btn-success mx-2" onClick={checkOnload}>Accepted</button>
+                                  * <button className="btn btn-success mx-2" onClick={checkOnload()}>Accepted</button>
+                                  * <button className="btn btn-success mx-2" onClick={() => checkOnload()}>Accepted</button>
+                                  * 
+                                  * <button className="btn btn-error mx-2" onClick={checkOnloadWithParam("ok")}>Rejected</button>
+                                  * <button className="btn btn-error mx-2" onClick={() => checkOnloadWithParam("ok")}>Rejected</button>
+                                  *
+                                  * here, we can see 2 kind of cases:
+                                  * if we pass a function reference to onClick, it will be called only when the button is clicked. (checkOnload)
+                                  * if we call the function directly in onClick (when we use the function name with parentheses), it will be called immediately when the component is rendered (checkOnload()) and will not work as expected when the button is clicked. especially, when we need to pass parameters we always need to use () parenthesis. but if we use () js will execute the function immediately.
+                                  * so, to avoid this issue we can use an arrow function to call the function with parameters. this way, the function will be called only when the button is clicked. (() => checkOnloadWithParam("ok")) 
+                                  * 
+                                  * we can also use annonymous function like this:
+                                  * <button className="btn btn-success mx-2" onClick={function () {checkOnload()}}>Accepted</button>
+                                  */}
+
+                                <button className="btn btn-success mx-2" onClick={() => reviewReqest("accepted", request._id)}>Accepted</button>
+                                <button className="btn btn-error mx-2" onClick={() => reviewReqest("rejected", request._id)}>Rejected</button>
                             </div>
 
                         </div>
