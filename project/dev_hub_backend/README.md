@@ -57,7 +57,7 @@ This project is part of my backend learning journey, where I focused on building
 ## Installation
 
 To setup node.js:
-Follow the [Official guide](https://nodejs.org/en/download). to run the project, there must be installed node.js in your system.
+Follow the [Official guide](https://nodejs.org/en/download). to run the project, there must be installed node.js (v24.14.0) in your system.
 
 To run this project locally, follow these steps:
 1. clone the repository:

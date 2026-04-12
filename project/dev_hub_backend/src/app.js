@@ -10,6 +10,7 @@ import dotenvExpand from 'dotenv-expand';
 import swaggerUi from 'swagger-ui-express';
 import swaggerFile from './swagger-output.json' with {type: "json"};
 import cors from 'cors';
+import "./utils/cron_job.js";
 
 const myEnv = dotenv.config();
 dotenvExpand.expand(myEnv);
