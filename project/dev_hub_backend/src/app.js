@@ -10,7 +10,9 @@ import dotenvExpand from 'dotenv-expand';
 import swaggerUi from 'swagger-ui-express';
 import swaggerFile from './swagger-output.json' with {type: "json"};
 import cors from 'cors';
-import "./utils/cron_job.js";
+// import "./utils/cron_job.js";
+import http from 'http';
+import { initializeSocket } from "./utils/socket.js";
 
 const myEnv = dotenv.config();
 dotenvExpand.expand(myEnv);
@@ -37,9 +39,13 @@ app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
 
+const httpServer = http.createServer(app);
+
+initializeSocket(httpServer);
+
 connectDB().then(() => {
     console.log("Database connected successfully!");
-    app.listen(port, () => {
+    httpServer.listen(port, () => {
         console.log(`Server is running on port ${port}`);
     });
 }).catch((err) => {
