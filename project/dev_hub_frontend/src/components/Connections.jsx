@@ -3,6 +3,7 @@ import { BASE_URL } from "../utils/constants";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addConnections } from "../utils/connectionSlice";
+import { Link } from "react-router";
 
 const Connections = () => {
 
@@ -38,22 +39,23 @@ const Connections = () => {
                 {connections.map((connection) => {
                     const { _id, firstName, lastName, photoUrl, age, gender, about } = connection;
                     return (
-                        <div key={_id} className="flex m-4 p-4 rounded-lg bg-base-300 w-1/2 mx-auto">
-                            <div className="flex-shrink-0">
-                                <img src={photoUrl} alt="photo" className="w-20 h-20 rounded-full" />
-                            </div>
-                            <div className="text-left mx-4">
-                                <h2 className="font-bold text-xl">{firstName} {lastName}</h2>
-                                {age && gender && <p>{age}, {gender}</p>}
-                                <p>{about}</p>
+                        <div key={_id} className="lg:flex flex-column justify-between items-start bg-base-300 rounded-lg bg-base-300 w-2/3 mx-auto   px-16 py-4 lg:p-4 m-4">
+                            <div className="flex">
+                                <div className="flex-shrink-0">
+                                    <img src={photoUrl} alt="photo" className="w-20 h-20 rounded-full" />
+                                </div>
+                                <div className="text-left mx-4">
+                                    <h2 className="font-bold text-xl">{firstName} {lastName}</h2>
+                                    {age && gender && <p>{age}, {gender}</p>}
+                                    <p>{about}</p>
+                                </div>
+                                <div className="lg:mx-12 mx-0"></div>
                             </div>
 
+                            <Link to={"/chat/" + _id}> <button className="btn btn-outline hover:bg-primary h-16 lg:w-32 w-full rounded-none hover:text-black lg:my-0 my-12">Chat</button></Link>
                         </div>
                     );
-
-
                 })}
-
             </div>
         </>
     );

@@ -11,3 +11,5 @@
 - package.json
 - difference between caret (^) and tilde (~) (see uses in version definition)
 - cors error
+- socket.io
+- cron job
