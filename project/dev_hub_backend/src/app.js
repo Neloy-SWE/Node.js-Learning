@@ -13,6 +13,7 @@ import cors from 'cors';
 // import "./utils/cron_job.js";
 import http from 'http';
 import { initializeSocket } from "./utils/socket.js";
+import { chatRouter } from "./route/chat.js";
 
 const myEnv = dotenv.config();
 dotenvExpand.expand(myEnv);
@@ -38,6 +39,7 @@ app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
+app.use("/", chatRouter);
 
 const httpServer = http.createServer(app);
 

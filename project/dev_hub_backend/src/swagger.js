@@ -20,7 +20,8 @@ const routes = [
   './route/auth.js', 
   './route/profile.js',
   './route/request.js',
-  './route/user.js'
+  './route/user.js',
+  './route/chat.js'
 ];
 
 swaggerAutogen()(outputFile, routes, doc);
