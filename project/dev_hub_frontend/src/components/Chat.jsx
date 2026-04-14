@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import { createSocketConnection } from "../utils/socket";
 import { useSelector } from "react-redux";
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
 
 const Chat = () => {
     const socketRef = useRef(null);
@@ -14,11 +16,43 @@ const Chat = () => {
     const user = useSelector((state) => state.user);
     const userId = user?._id;
 
+    const fetchChatMessages = async () => {
+        const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, { withCredentials: true });
+
+        // console.log(chat.data.messages);
+
+        const chatMessages = chat?.data?.messages.map((message) => {
+            const { senderId, text, createdAt } = message;
+            const { firstName, lastName, _id } = senderId;
+            const currentTime = new Date(message.createdAt).toLocaleDateString('en-GB',
+                {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                }
+            );
+
+            return {
+                firstName,
+                lastName,
+                text,
+                currentTime,
+                id: _id,
+            };
+        });
+
+        setMessages(chatMessages);
+    }
+
     const sendMessage = () => {
         if (socketRef.current) {
             socketRef.current.emit("sendMessage",
                 {
                     firstName: user.firstName,
+                    lastName: user.lastName,
                     userId,
                     targetUserId,
                     text: newMessage,
@@ -29,17 +63,20 @@ const Chat = () => {
         }
     }
 
+    useEffect(() => {
+        fetchChatMessages();
+    }, []);
 
     useEffect(() => {
         if (!userId || !targetUserId) return;
         socketRef.current = createSocketConnection();
         const socket = socketRef.current;
-        
+
         socket.emit("joinChat", { firstName: user.firstName, userId, targetUserId });
 
-        socket.on("messageReceived", ({ firstName, text, currentTime, id }) => {
+        socket.on("messageReceived", ({ firstName, lastName, text, currentTime, id }) => {
             // console.log(firstName, text);
-            setMessages((prevMessages) => [...prevMessages, { firstName, text, currentTime, id }]);
+            setMessages((prevMessages) => [...prevMessages, { firstName, lastName, text, currentTime, id }]);
         });
 
         return () => {
@@ -55,10 +92,10 @@ const Chat = () => {
                 {messages && messages.map((message, index) => {
 
                     return (
-                        <div key={index}>
+                        <div key={index} className="mb-5">
                             <div className={`chat ${message.id === userId ? 'chat-end' : 'chat-start'}`}>
                                 <div className="chat-header">
-                                    {message.id === userId ? "Me" : message.firstName}
+                                    {message.id === userId ? "Me" : `${message.firstName} ${message.lastName}`}
                                     <time className="text-xs opacity-50">{message.currentTime}</time>
                                 </div>
                                 <div className="chat-bubble">{message.text}</div>
