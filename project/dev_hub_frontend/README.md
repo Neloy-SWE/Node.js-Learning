@@ -82,6 +82,50 @@ npm install
 npm run dev
 ```
 
+## Project Overview:
+
+<figure>
+<table border="0">
+  <tr>
+    <td width="45%">
+      <img src="../../screenshots/1.1.login.png" width="100%" alt="login"/>
+    </td>
+    <td width="10%"></td> <!-- This creates the "space between" -->
+    <td width="45%">
+      <img src="../../screenshots/1.2.signup.png" width="100%" alt="signup"/>
+    </td>
+  </tr>
+</table>
+  <figcaption align="center">
+    <i>only registered user can use the app.</i>
+  </figcaption>
+</figure>
+
+<br><br>
+<img src="../../screenshots/2.feed.png" width="45%"  alt="feed"/>
+- user can see other users in feed and can show interest for connection or ignore profile.
+
+<br><br>
+<img src="../../screenshots/3.profile.png" width="45%"  alt="profile"/>
+- user can check own profile.
+
+<br><br>
+<figure>
+  <table border="0">
+    <tr>
+      <td width="30%"><img src="../../screenshots/4.1.connections.png" width="100%" alt="connection list"/></td>
+      <td width="3%"></td>
+      <td width="30%"><img src="../../screenshots/4.2.request.png" width="100%" alt="request list"></td>
+      <td width="3%"></td>
+      <td width="30%"><img src="../../screenshots/5.chat.png" width="100%" alt="chat"></td>
+    </tr>
+  </table>
+  <figcaption align="center">
+    <i>Users can check their connection list, manage requests, and chat with connected users.</i>
+  </figcaption>
+</figure>
+
+
 ## Support
 
 If you find this project useful, consider giving it a star.
