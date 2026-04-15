@@ -9,6 +9,7 @@ This project is part of my backend learning journey, where I focused on building
 - CRUD operations
 - Middleware-based architecture
 - Error handling
+- Real time chat
 
 ## Tools & Technologies
 - JavaScript
@@ -19,11 +20,14 @@ This project is part of my backend learning journey, where I focused on building
 # Libraries
 - "bcrypt": "^6.0.0",
 - "cookie-parser": "^1.4.7",
+- "cors": "^2.8.6",
 - "dotenv": "^17.3.1",
 - "dotenv-expand": "^12.0.3",
 - "express": "^5.2.1",
 - "jsonwebtoken": "^9.0.3",
 - "mongoose": "^9.3.0",
+- "node-cron": "^4.2.1",
+- "socket.io": "^4.8.3",
 - "swagger-ui-express": "^5.0.1",
 - "validator": "^13.15.26"
 
@@ -41,22 +45,28 @@ This project is part of my backend learning journey, where I focused on building
 │       auth.js
 │
 ├───model
+│       chat.js
 │       connection_request.js
 │       user.js
 │
 ├───route
 │       auth.js
+│       chat.js
 │       profile.js
 │       request.js
 │       user.js
 │
+├───utils
+│       cron_job.js
+│       socket.js
+|
 └───validator
         validator_fields.js
 ```
 
 ## Installation
 
-To setup node.js:
+To setup node.js:<br>
 Follow the [Official guide](https://nodejs.org/en/download). to run the project, there must be installed node.js (v24.14.0) in your system.
 
 To run this project locally, follow these steps:
@@ -110,16 +120,20 @@ npm run dev
 - PATCH /profile/edit
 - PATCH /profile/update-password
 
-### Requests
+### Request
 
 - POST /request/send/:status/:toUserId
 - POST /request/review/:status/:requestId
 
-### Users
+### User
 
 - GET /user/pending-requests
 - GET /user/connections
 - GET /feed
+
+### Chat
+
+- GET /chat/:targetUserId
 
 ## Authentication
 
@@ -129,11 +143,11 @@ These APIs uses cookie-based authentication.
 - The token is automatically sent with subsequent requests
 - On logout, the cookie is cleared
 
-when you enter **localhost:<your_port>/doc** in your browser after the run project, you can check all the APIs in swagger with request body, params or queries. it will only work if you run ```npm run swagger``` before run the project.
+when you enter **localhost:<your_port>/doc** in your browser after run the project, you can check all the APIs in swagger with request body, params or queries. it will only work if you run ```npm run swagger``` before run the project.
 
 ## Support
 
 If you find this project useful, consider giving it a star.
 
-For feedback or suggestions:
+For feedbacks or suggestions:
 Email: taufiqneloy.swe@gmail.com
