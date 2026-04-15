@@ -97,17 +97,17 @@ npm run dev
   </tr>
 </table>
   <figcaption align="center">
-    <i>only registered user can use the app.</i>
+    <i>Only registered user can use the app.</i>
   </figcaption>
 </figure>
 
 <br><br>
 <img src="../../screenshots/2.feed.png" width="45%"  alt="feed"/>
-- user can see other users in feed and can show interest for connection or ignore profile.
+- User can see other users in feed and can show interest for connection or ignore profile.
 
 <br><br>
 <img src="../../screenshots/3.profile.png" width="45%"  alt="profile"/>
-- user can check own profile.
+- User can check own profile.
 
 <br><br>
 <figure>
