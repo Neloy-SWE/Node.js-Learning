@@ -475,17 +475,15 @@ I have designed a backend project uisng node.js-express.js as well as frontend p
 </table>
 - only registered user can use the app.
 
-<br>
+<br><br>
 <img src="screenshots/2.feed.png" width="45%"  alt="feed"/>
-<br>
 - user can see other users in feed and can show interest for connection or ignore profile.
 
-<br>
+<br><br>
 <img src="screenshots/3.profile.png" width="45%"  alt="profile"/>
-<br>
 - user can check own profile.
 
-<br>
+<br><br>
 <table border="0">
   <tr>
     <td width="30%">
