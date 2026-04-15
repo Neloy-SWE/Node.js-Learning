@@ -458,10 +458,7 @@ I have designed a backend project uisng node.js-express.js as well as frontend p
 
 ## Project Overview:
 
-<!-- <p align="center">
- <img src="screenshots/1.1.login.png" width="45%"  alt="login"/>
- <img src="screenshots/1.2.signup.png" width="45%"  alt="login"/>
- </p> -->
+<figure>
 <table border="0">
   <tr>
     <td width="45%">
@@ -473,7 +470,10 @@ I have designed a backend project uisng node.js-express.js as well as frontend p
     </td>
   </tr>
 </table>
-- only registered user can use the app.
+  <figcaption align="center">
+    <i>only registered user can use the app.</i>
+  </figcaption>
+</figure>
 
 <br><br>
 <img src="screenshots/2.feed.png" width="45%"  alt="feed"/>
@@ -484,22 +484,23 @@ I have designed a backend project uisng node.js-express.js as well as frontend p
 - user can check own profile.
 
 <br><br>
-<table border="0">
-  <tr>
-    <td width="30%">
-      <img src="screenshots/4.1.connections.png" width="100%" alt="connection list"/>
-    </td>
-    <td width="3%"></td>
-    <td width="30%">
-      <img src="screenshots/4.2.request.png" width="100%" alt="request list"/>
-    </td>
-    <td width="3%"></td>
-    <td width="30%">
-      <img src="screenshots/5.chat.png" width="100%" alt="chat"/>
-    </td>
-  </tr>
-</table>
-- user can check connection list, connection request as well as can chat with connected user.<br><br>
+<figure>
+  <table border="0">
+    <tr>
+      <td width="30%"><img src="screenshots/4.1.connections.png" width="100%" alt="connection list"/></td>
+      <td width="3%"></td>
+      <td width="30%"><img src="screenshots/4.2.request.png" width="100%" alt="request list"></td>
+      <td width="3%"></td>
+      <td width="30%"><img src="screenshots/5.chat.png" width="100%" alt="chat"></td>
+    </tr>
+  </table>
+  <figcaption align="center">
+    <i>Users can check their connection list, manage requests, and chat with connected users.</i>
+  </figcaption>
+</figure>
+
+
+<br><br>
 
 If you find this repository useful, consider giving it a star.
 
