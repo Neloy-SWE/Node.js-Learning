@@ -149,6 +149,13 @@ Buffers are used to handle binary data in Node.js. They provide a way to work wi
 ## Pipes
 Pipes in Node.js are a powerful feature for managing the flow of data between streams. They simplify the process of reading from a readable stream and writing to a writable stream, facilitating efficient and seamless data processing.
 
+## WebSocket
+A computer communications protocol that provides full-duplex (two-way) communication channels over a single, long-lived TCP connection.
+
+- Unlike HTTP, where the client must ask for data, WebSockets allow the server to send data to the client at any time without being asked. Both can send and receive simultaneously. Every WebSocket starts as an HTTP request. The client sends a special "Upgrade" header. If the server agrees, the connection "switches" from HTTP to the WebSocket protocol. Once the connection is established, it stays open as long as the client or server wants. This eliminates the need to constantly open and close connections (which saves a lot of time and resources). After the initial handshake, the "headers" sent with each message are very small (only a few bytes), compared to HTTP headers which can be several kilobytes. This makes it incredibly fast.
+- Unlike SQL or HTTP (which are often stateless), WebSockets are stateful. This means the server knows exactly which user is connected for the entire duration of the session without checking a database every time.
+- Just like HTTPS is the secure version of HTTP, WSS (WebSocket Secure) is the encrypted version of WebSockets, protecting data from "man-in-the-middle" attacks. 
+
 ## Execution process
 - When a Node.js program starts, V8 begins executing all synchronous JavaScript code on the main thread using the call stack.
 - Every synchronous statement runs immediately and blocks the thread until it finishes. Nothing else can run while the call stack is busy.
@@ -392,3 +399,111 @@ A database is an organized collection of structured information, or data, typica
 - **Cloud DB**: Amazon RDS (Relational Database Service) is a managed cloud database service that supports multiple relational database engines, including MySQL, PostgreSQL, and Oracle. It automates tasks like backups, patching, and scaling, making it easy to deploy and manage databases in the cloud.
 
 **Note**: *There are several types of DB. But most of the time we use relational DB like MySQL, oracol or PostgreSQL as well as NoSQL like mongoDB.*
+
+## SQL VS NoSQL
+
+### SQL:
+- **RDBMS (Relational Database Management System)**: The foundational architecture where data is organized into predefined logical relationships. It is the "traditional" way of storing data.
+- **Table**: The primary unit of storage. It uses Columns (to define the data type, like "Integer" or "Text") and Rows (to represent an individual entry or record).
+- **Rigid Schema**: This is a strict blueprint. You must define your tables and columns before you can insert data. If you want to add a new category later, you must alter the entire database structure.
+- **Primary & Foreign Keys**: These are the "links" between tables. A Primary Key uniquely identifies a row, while a Foreign Key connects that row to data in a different table, ensuring "Relational" integrity.
+- **ACID Compliance**: This stands for Atomicity, Consistency, Isolation, and Durability. It is a set of properties that guarantee database transactions are processed reliably—essentially ensuring that your data never gets corrupted or lost during a crash.
+- **Vertical Scaling**: To handle more traffic, you typically "scale up" by adding more power (CPU, RAM, SSD) to the single server hosting the database.
+- **Complex Joins**: SQL is designed to handle complex queries that pull and combine data from many different tables simultaneously using the JOIN command.
+- **Use Cases**: Best for structured data where consistency is non-negotiable, such as banking systems, accounting, healthcare records, and legacy ERP systems.
+
+### NoSQL:
+
+- **Non-Relational/Distributed**: A system designed to handle unstructured data that is spread across many different servers. It is built for speed and massive scale.
+- **Document**: The most common NoSQL format (usually JSON). Instead of rows and columns, data is stored in "documents" that contain all the information for a record in one place.
+- **Dynamic Schema**: Also called "Schema-less." You do not need to define a structure upfront. One document can have 5 fields, and the next can have 10. This allows for very fast development and changes.
+- **Horizontal Scaling**: Also known as Sharding. Instead of making one server bigger, you "scale out" by adding hundreds or thousands of smaller, cheaper servers to a cluster to share the load.
+- **CAP Theorem**: NoSQL databases balance Consistency, Availability, and Partition Tolerance. Most NoSQL systems prioritize "Availability" (the system is always up) over "Immediate Consistency" (data might take a few seconds to sync across all servers).
+- **Data Models**: NoSQL isn't just documents; it includes Key-Value stores (fast caching), Wide-Column stores (massive data sets), and Graph databases (mapping social networks).
+- **High Performance**: Because data is often stored together in a single document rather than split across tables, the database can retrieve information much faster for specific types of requests.
+- **Use Cases**: Ideal for Big Data analytics, real-time social media feeds, content management (CMS), IoT sensor data, and mobile apps where the data structure changes daily.
+
+## HTTP requests
+An HTTP request is a digital message sent from a client (like a web browser or API tool) to a server to initiate an action, such as fetching a webpage, posting data, or deleting a resource.
+
+- **GET**: Retrieves data from the server and returns status 200 on success.
+- **POST**: Sends data to create a resource and returns status 201 on success.
+- **PUT**: Replaces the entire resource or creates it if not present.
+- **PATCH**: Updates only specific parts of a resource.
+- **DELETE**: Removes data from the server at a specified location.
+
+## package.json
+In Node.js, package.json is a manifest file located at the root of a project that serves as its central configuration hub. It describes the project's metadata, manages its dependencies, and defines automated scripts.
+
+## Cross-Origin Resource Sharing (CORS)
+it is a browser-level security feature that allows a web application on one domain to safely access resources (like APIs) on a different domain.<br><br>When you make a cross-origin request (like using ```fetch()``` in JavaScript to call an API on a different domain), the browser automatically adds an Origin header to the request. The server checks that origin. If it's allowed, the server responds with a special header: ```Access-Control-Allow-Origin```. If this header matches your site, the browser lets the data through. If the server doesn't send that header, or the header doesn't match your site, the browser blocks the response.
+
+**Note**: *The request usually actually hits the server; it's the browser that prevents your code from seeing the result.*
+
+For "dangerous" requests (like DELETE, PUT, or those with custom headers), the browser doesn't want to risk sending the data immediately. The browser first sends a "hidden" request using the OPTIONS method. It’s basically asking the server if the request is acceptable or not. If the server responds with a "Yes" (using headers like ```Access-Control-Allow-Methods```), only then does the browser send the actual request.
+
+- ```Access-Control-Allow-Origin``` specifies which domains can access the resource.
+- ```Access-Control-Allow-Methods``` Tells the browser which HTTP methods (GET, POST, DELETE, etc.) are permitted.
+- ```Access-Control-Allow-Headers``` Tells the browser which custom headers (like Authorization or X-Custom-Header) are allowed.
+- ```Access-Control-Allow-Credentials``` Required if you want to send cookies or authentication headers along with the cross-origin request.
+
+
+## **Note**: *I have tried to add as many details as possible. If you find any topic interesting but need more details, please feel free to read from other resources. If you think any information is incorrect, please let me know (email at below).*
+
+
+## Practice project
+I have designed a backend project uisng node.js-express.js as well as frontend project using react.js. For database I have used Mongodb. pay a visit:
+- [Backend](./project/dev_hub_backend/)
+- [Frontend](./project/dev_hub_frontend/)
+
+## Project Overview:
+
+<!-- <p align="center">
+ <img src="screenshots/1.1.login.png" width="45%"  alt="login"/>
+ <img src="screenshots/1.2.signup.png" width="45%"  alt="login"/>
+ </p> -->
+<table border="0">
+  <tr>
+    <td width="45%">
+      <img src="screenshots/1.1.login.png" width="100%" alt="login"/>
+    </td>
+    <td width="10%"></td> <!-- This creates the "space between" -->
+    <td width="45%">
+      <img src="screenshots/1.2.signup.png" width="100%" alt="signup"/>
+    </td>
+  </tr>
+</table>
+- only registered user can use the app.
+
+<br>
+<img src="screenshots/2.feed.png" width="45%"  alt="feed"/>
+<br>
+- user can see other users in feed and can show interest for connection or ignore profile.
+
+<br>
+<img src="screenshots/3.profile.png" width="45%"  alt="profile"/>
+<br>
+- user can check own profile.
+
+<br>
+<table border="0">
+  <tr>
+    <td width="30%">
+      <img src="screenshots/4.1.connections.png" width="100%" alt="connection list"/>
+    </td>
+    <td width="3%"></td>
+    <td width="30%">
+      <img src="screenshots/4.2.request.png" width="100%" alt="request list"/>
+    </td>
+    <td width="3%"></td>
+    <td width="30%">
+      <img src="screenshots/5.chat.png" width="100%" alt="chat"/>
+    </td>
+  </tr>
+</table>
+- user can check connection list, connection request as well as can chat with connected user.<br><br>
+
+If you find this repository useful, consider giving it a star.
+
+For feedbacks or suggestions:
+Email: taufiqneloy.swe@gmail.com
